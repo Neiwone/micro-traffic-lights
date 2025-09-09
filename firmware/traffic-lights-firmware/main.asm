@@ -1,0 +1,6 @@
+
+jmp RESET
+
+
+RESET:
+	nop
