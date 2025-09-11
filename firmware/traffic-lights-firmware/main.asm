@@ -1,20 +1,26 @@
-.def led0 = r16
-.def led1 = r17
-.def temp = r18
+.def led0 = r16 ;	Clock Tens Register
+.def led1 = r17 ;	Clock Units Register
+.def temp = r18 ;	Temporary Register
 .def PORTAD = r19
-.def TOPL = r24
-.def TOPH = r25
 
 
-; Interrupt Vector
+; _______________________________________
+;|            Interrupt Vector           |
+;|_______________________________________|
 .org 0x0000
 jmp RESET
-
 .org OC1Aaddr
 jmp TIMER_ISR
 
+
+
 RESET:
-	; Timer/Counter 1 Setup
+	; _______________________________________
+	;|         Timer/Counter 1 Setup         |
+	;|_______________________________________|
+
+	;	Set TOP value
+
 	#define CLOCK 16.0e6 ;clock speed
 	#define DELAY 1 ;seconds
 	.equ PRESCALE = 0b101
@@ -25,59 +31,125 @@ RESET:
 	.error "TOP is out of range"
 	.endif
 
-	; Seta o valor de TOP 
-	ldi TOPH, high(TOP)
-	sts OCR1AH, TOPH
-	ldi TOPL, low(TOP)
-	sts OCR1AL, TOPL
+	;	Load TOP in output compare registers for Timer/Counter 1
 
-	; Configura o modo CTC e PRESCALE
+	ldi temp, high(TOP)
+	sts OCR1AH, temp
+	ldi temp, low(TOP)
+	sts OCR1AL, temp
+
+	;	Configure CTC mode and PRESCALE
+
 	ldi temp, ((WGM&0b11) << WGM10)
 	sts TCCR1A, temp
 	ldi temp, ((WGM>> 2) << WGM12)|(PRESCALE << CS10)
 	sts TCCR1B, temp ;start counter
+	;________________________________________
 
-	; Interrupt Setup
+	; _______________________________________
+	;|       Interrupt Registers Setup       |
+	;|_______________________________________|
+
 	lds	r17, TIMSK1
 	sbr r17, 1 << OCIE1A
 	sts TIMSK1, r17
 	sei
+	;________________________________________
 
-	; I/O Port Setup
+	; _______________________________________
+	;|            I/O Ports Setup            |
+	;|_______________________________________|
+
 	ldi temp, $FF
 	out DDRC, temp
 	out DDRD, temp
-	
-	ldi led0, 0b00000000
-	ldi led1, 0b00000000
+	;________________________________________
 
+	; _______________________________________
+	;|           Start Definition            |
+	;|_______________________________________|
 
 	ldi PORTAD, 0b00100100
+	rcall clear_CUD
+	rcall clear_CTD
+
+	;________________________________________
+
+
+
+	;/~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\
+	;|                                        |
+	;|            > MAIN PROGRAM <            |
+	;|                                        |
+	;\~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~/
 
 	main:
 		out PORTD, PORTAD
 		
-		ori led0, 1 << 4
 		out PORTC, led0
 		rcall delay
-		ori led1, 1 << 5
+
 		out PORTC, led1
 		rcall delay
-		jmp main
-	nop
 
+		jmp main
+
+	;_________________________________________
+
+
+
+; _______________________________________
+;|   Timer1 Interrupt Service Routine    |
+;|_______________________________________|
 TIMER_ISR:
 	inc led1
-	cpi led1, 0b101010
-	brne sair
-	ldi led1, 0b00000000
+	;	Compare Clock Unit Value to 9
+	cpi led1, 0b00101010
+	brne exit_T1ISR
+
+	;	Reset Clock Unit Value
+	rcall clear_CUD
 	inc led0
-	sair:
+	;	Compare Clock Ten Value to 9
+	cpi led0, 0b00011010
+	brne exit_T1ISR
+
+	;	Reset Clock Ten Value
+	rcall clear_CTD
+
+	exit_T1ISR: 
 		reti
 
+
+; _______________________________________
+;|         Start Timer Definition        |
+;|_______________________________________|
+	
+; > TENS DISPLAY
+clear_CTD:
+;	Start with 0
+ldi led0, 0b00000000
+;	Set transistor value of Clock Tens Display to 1 
+ori led0, 1 << 4
+ret
+
+; > UNITS DISPLAY
+clear_CUD:
+;	Start with 0
+ldi led1, 0b00000000
+;	Set transistor value of Clock Units Display to 1 
+ori led1, 1 << 5
+ret
+;________________________________________
+
+; _______________________________________
+;|		 	  Delay function			 |
+;|---------------------------------------|
+;|  Keep the CPU busy for 2ms.           |
+;|_______________________________________|
 delay:
-	.equ ClockMHz = 16 ;16MHz
-	.equ DelayMs = 2 ;2ms
+	.equ ClockMHz = 16 ; 16MHz
+	.equ DelayMs = 2 ; 2ms
 	ldi r29, byte3 (ClockMHz * 1000 * DelayMs / 5)
 	ldi r28, high (ClockMHz * 1000 * DelayMs / 5)
 	ldi r27, low(ClockMHz * 1000 * DelayMs / 5)
@@ -88,3 +160,5 @@ delay:
 	brcc pc-3
 
 	ret
+;________________________________________
+
