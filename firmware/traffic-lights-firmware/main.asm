@@ -1,18 +1,37 @@
 .def led0 = r16 ;	Clock Tens Register
 .def led1 = r17 ;	Clock Units Register
 .def temp = r18 ;	Temporary Register
-.def PORTAD = r19
 
+
+.def current_stateH = r19
+.def current_stateL = r20
+.def state = r21
 
 ; _______________________________________
 ;|            Interrupt Vector           |
 ;|_______________________________________|
+
 .org 0x0000
 jmp RESET
 .org OC1Aaddr
 jmp TIMER_ISR
 
 
+
+; _______________________________________
+;|            Defining States            |
+;|---------------------------------------|
+;|     0b10010000'00100100 -> RRRR       |
+;|     0b00100100'00100100 -> GGRR       |
+;|     0b01000100'00100100 -> GYRR       |
+;|     0b10000100'00100001 -> GRGR       |
+;|     0b10001000'00100010 -> YRYR       |
+;|     0b10010000'00001100 -> RRRG       |
+;|     0b10010000'00010100 -> RRRY       |
+;|_______________________________________|
+
+Table_States:
+.dw 0b1001000000100100, 0b0010010000100100, 0b0100010000100100, 0b1000010000100001, 0b1000100000100010, 0b1001000000001100, 0b1001000000010100
 
 RESET:
 	; _______________________________________
@@ -42,7 +61,7 @@ RESET:
 
 	ldi temp, ((WGM&0b11) << WGM10)
 	sts TCCR1A, temp
-	ldi temp, ((WGM>> 2) << WGM12)|(PRESCALE << CS10)
+	ldi temp, ((WGM>> 2) << WGM12) | (PRESCALE << CS10)
 	sts TCCR1B, temp ;start counter
 	;________________________________________
 
@@ -61,6 +80,7 @@ RESET:
 	;|_______________________________________|
 
 	ldi temp, $FF
+	out DDRB, temp
 	out DDRC, temp
 	out DDRD, temp
 	;________________________________________
@@ -69,9 +89,13 @@ RESET:
 	;|           Start Definition            |
 	;|_______________________________________|
 
-	ldi PORTAD, 0b00100100
+	ldi state, 0
+	; ldi current_stateL, 0b00100100
+	; ldi current_stateH, 0b00100100
 	rcall clear_CUD
 	rcall clear_CTD
+
+	rcall STATE0
 
 	;________________________________________
 
@@ -84,7 +108,9 @@ RESET:
 	;\~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~/
 
 	main:
-		out PORTD, PORTAD
+		; Send traffic lights states by PORTD & PORTB
+		out PORTB, current_stateH
+		out PORTD, current_stateL
 		
 		out PORTC, led0
 		rcall delay
@@ -102,6 +128,26 @@ RESET:
 ;|   Timer1 Interrupt Service Routine    |
 ;|_______________________________________|
 TIMER_ISR:
+	inc state
+
+	;ldi temp, 0
+	;cpse state, temp
+   ; breq STATE0_CALL
+	;cpi state, 1
+    ;breq STATE1
+	;cpi state, 2
+    ;breq STATE2
+	;cpi state, 3
+    ;breq STATE3
+	;cpi state, 4
+    ;breq STATE4
+	;cpi state, 5
+    ;breq STATE5
+	;cpi state, 6
+    ;breq STATE6
+	;cpi state, 0
+	
+
 	inc led1
 	;	Compare Clock Unit Value to 9
 	cpi led1, 0b00101010
@@ -119,7 +165,6 @@ TIMER_ISR:
 
 	exit_T1ISR: 
 		reti
-
 
 ; _______________________________________
 ;|         Start Timer Definition        |
@@ -162,3 +207,52 @@ delay:
 	ret
 ;________________________________________
 
+
+STATE0:
+	ldi ZH, high(Table_States+0<<1)  
+    ldi ZL, low(Table_States+0<<1)
+    lpm current_stateH, Z+
+	lpm current_stateL, Z
+	ret
+
+STATE1:
+	ldi ZH, high(Table_States+1<<1)  
+    ldi ZL, low(Table_States+1<<1)
+    lpm current_stateH, Z+
+	lpm current_stateL, Z
+	ret
+
+STATE2:
+	ldi ZH, high(Table_States+2<<1)  
+    ldi ZL, low(Table_States+2<<1)
+    lpm current_stateH, Z+
+	lpm current_stateL, Z
+	ret
+
+STATE3:
+	ldi ZH, high(Table_States+3<<1)  
+    ldi ZL, low(Table_States+3<<1)
+    lpm current_stateH, Z+
+	lpm current_stateL, Z
+	ret
+
+STATE4:
+	ldi ZH, high(Table_States+4<<1)  
+    ldi ZL, low(Table_States+4<<1)
+    lpm current_stateH, Z+
+	lpm current_stateL, Z
+	ret
+
+STATE5:
+	ldi ZH, high(Table_States+5<<1)  
+    ldi ZL, low(Table_States+5<<1)
+    lpm current_stateH, Z+
+	lpm current_stateL, Z
+	ret
+
+STATE6:
+	ldi ZH, high(Table_States+6<<1)  
+    ldi ZL, low(Table_States+6<<1)
+    lpm current_stateH, Z+
+	lpm current_stateL, Z
+	ret
