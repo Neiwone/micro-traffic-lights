@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm Wed Sep 17 10:49:39 2025
+AVRASM ver. 2.2.8  C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm Wed Sep 17 11:41:30 2025
 
 
 EQU  SIGNATURE_000 0000001e
@@ -701,6 +701,7 @@ DEF  temp         r18
 DEF  current_stateH r19
 DEF  current_stateL r20
 DEF  state        r21
+DEF  change_timer_timer r22
 CSEG RESET        0000001f
 CSEG TIMER_ISR    00000041
 CSEG Table_States 00000018
@@ -708,17 +709,26 @@ EQU  PRESCALE     00000005
 EQU  PRESCALE_DIV 00000400
 EQU  WGM          00000004
 EQU  TOP          00003d09
-CSEG clear_CUD    0000004e
-CSEG clear_CTD    0000004b
-CSEG STATE0       00000059
+CSEG clear_CUD    0000007c
+CSEG clear_CTD    00000079
+CSEG STATE0       00000087
 CSEG main         00000039
-CSEG delay        00000051
-CSEG exit_T1ISR   0000004a
+CSEG delay        0000007f
+CSEG CONTINUE     00000070
+CSEG TEST0        00000047
+CSEG TEST1        0000004c
+CSEG TEST2        00000051
+CSEG STATE1       0000008f
+CSEG TEST3        00000056
+CSEG STATE2       00000097
+CSEG TEST4        0000005b
+CSEG STATE3       0000009f
+CSEG TEST5        00000060
+CSEG STATE4       000000a7
+CSEG TEST6        00000065
+CSEG STATE5       000000af
+CSEG TEST7        0000006a
+CSEG STATE6       000000b7
+CSEG exit_T1ISR   00000078
 EQU  ClockMHz     00000010
 EQU  DelayMs      00000002
-CSEG STATE1       0000005e
-CSEG STATE2       00000063
-CSEG STATE3       00000068
-CSEG STATE4       0000006d
-CSEG STATE5       00000072
-CSEG STATE6       00000077

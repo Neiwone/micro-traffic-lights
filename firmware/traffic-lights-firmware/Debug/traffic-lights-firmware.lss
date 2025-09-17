@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm Wed Sep 17 10:49:39 2025
+AVRASM ver. 2.2.8  C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm Wed Sep 17 11:41:30 2025
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328Pdef.inc'
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328Pdef.inc'
@@ -992,6 +992,7 @@ AVRASM ver. 2.2.8  C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-t
                                  .def current_stateH = r19
                                  .def current_stateL = r20
                                  .def state = r21
+                                 .def change_timer_timer = r22
                                  
                                  ; _______________________________________
                                  ;|            Interrupt Vector           |
@@ -1081,12 +1082,10 @@ AVRASM ver. 2.2.8  C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-t
                                  	;|_______________________________________|
                                  
 000035 e050                      	ldi state, 0
-                                 	; ldi current_stateL, 0b00100100
-                                 	; ldi current_stateH, 0b00100100
-000036 d017                      	rcall clear_CUD
-000037 d013                      	rcall clear_CTD
+000036 d045                      	rcall clear_CUD
+000037 d041                      	rcall clear_CTD
                                  
-000038 d020                      	rcall STATE0
+000038 d04e                      	rcall STATE0
                                  
                                  	;________________________________________
                                  
@@ -1104,10 +1103,10 @@ AVRASM ver. 2.2.8  C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-t
 00003a b94b                      		out PORTD, current_stateL
                                  		
 00003b b908                      		out PORTC, led0
-00003c d014                      		rcall delay
+00003c d042                      		rcall delay
                                  
 00003d b918                      		out PORTC, led1
-00003e d012                      		rcall delay
+00003e d040                      		rcall delay
                                  
 00003f 940c 0039                 		jmp main
                                  
@@ -1119,43 +1118,74 @@ AVRASM ver. 2.2.8  C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-t
                                  ;|   Timer1 Interrupt Service Routine    |
                                  ;|_______________________________________|
                                  TIMER_ISR:
-000041 9553                      	inc state
+000041 5061                      	subi change_timer_timer, 1
                                  
-                                 	;ldi temp, 0
-                                 	;cpse state, temp
-                                    ; breq STATE0_CALL
-                                 	;cpi state, 1
-                                     ;breq STATE1
-                                 	;cpi state, 2
-                                     ;breq STATE2
-                                 	;cpi state, 3
-                                     ;breq STATE3
-                                 	;cpi state, 4
-                                     ;breq STATE4
-                                 	;cpi state, 5
-                                     ;breq STATE5
-                                 	;cpi state, 6
-                                     ;breq STATE6
-                                 	;cpi state, 0
-                                 	
+                                 	; Compare
+000042 e020                      	ldi temp, 0
+000043 1362                      	cpse change_timer_timer, temp
+000044 940c 0070                 	jmp CONTINUE
+000046 9553                      	inc state
                                  
-000042 9513                      	inc led1
+                                 	TEST0:
+000047 e020                      	ldi temp, 0
+000048 1352                      	cpse state, temp
+000049 940c 004c                 	jmp TEST1
+00004b d03b                      	rcall STATE0
+                                 	TEST1:
+00004c e021                      	ldi temp, 1
+00004d 1352                      	cpse state, temp
+00004e 940c 0051                 	jmp TEST2
+000050 d03e                      	rcall STATE1
+                                 	TEST2:
+000051 e022                      	ldi temp, 2
+000052 1352                      	cpse state, temp
+000053 940c 0056                 	jmp TEST3
+000055 d041                      	rcall STATE2
+                                 	TEST3:
+000056 e023                      	ldi temp, 3
+000057 1352                      	cpse state, temp
+000058 940c 005b                 	jmp TEST4
+00005a d044                      	rcall STATE3
+                                 	TEST4:
+00005b e024                      	ldi temp, 4
+00005c 1352                      	cpse state, temp
+00005d 940c 0060                 	jmp TEST5
+00005f d047                      	rcall STATE4
+                                 	TEST5:
+000060 e025                      	ldi temp, 5
+000061 1352                      	cpse state, temp
+000062 940c 0065                 	jmp TEST6
+000064 d04a                      	rcall STATE5
+                                 	TEST6:
+000065 e026                      	ldi temp, 6
+000066 1352                      	cpse state, temp
+000067 940c 006a                 	jmp TEST7
+000069 d04d                      	rcall STATE6
+                                 	TEST7:
+00006a e027                      	ldi temp, 7
+00006b 1352                      	cpse state, temp
+00006c 940c 0070                 	jmp CONTINUE
+00006e e050                      	ldi state, 0
+00006f d017                      	rcall STATE0
+                                 	CONTINUE:
+                                 
+000070 9513                      	inc led1
                                  	;	Compare Clock Unit Value to 9
-000043 321a                      	cpi led1, 0b00101010
-000044 f429                      	brne exit_T1ISR
+000071 321a                      	cpi led1, 0b00101010
+000072 f429                      	brne exit_T1ISR
                                  
                                  	;	Reset Clock Unit Value
-000045 d008                      	rcall clear_CUD
-000046 9503                      	inc led0
+000073 d008                      	rcall clear_CUD
+000074 9503                      	inc led0
                                  	;	Compare Clock Ten Value to 9
-000047 310a                      	cpi led0, 0b00011010
-000048 f409                      	brne exit_T1ISR
+000075 310a                      	cpi led0, 0b00011010
+000076 f409                      	brne exit_T1ISR
                                  
                                  	;	Reset Clock Ten Value
-000049 d001                      	rcall clear_CTD
+000077 d001                      	rcall clear_CTD
                                  
                                  	exit_T1ISR: 
-00004a 9518                      		reti
+000078 9518                      		reti
                                  
                                  ; _______________________________________
                                  ;|         Start Timer Definition        |
@@ -1164,18 +1194,18 @@ AVRASM ver. 2.2.8  C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-t
                                  ; > TENS DISPLAY
                                  clear_CTD:
                                  ;	Start with 0
-00004b e000                      ldi led0, 0b00000000
+000079 e000                      ldi led0, 0b00000000
                                  ;	Set transistor value of Clock Tens Display to 1 
-00004c 6100                      ori led0, 1 << 4
-00004d 9508                      ret
+00007a 6100                      ori led0, 1 << 4
+00007b 9508                      ret
                                  
                                  ; > UNITS DISPLAY
                                  clear_CUD:
                                  ;	Start with 0
-00004e e010                      ldi led1, 0b00000000
+00007c e010                      ldi led1, 0b00000000
                                  ;	Set transistor value of Clock Units Display to 1 
-00004f 6210                      ori led1, 1 << 5
-000050 9508                      ret
+00007d 6210                      ori led1, 1 << 5
+00007e 9508                      ret
                                  ;________________________________________
                                  
                                  ; _______________________________________
@@ -1186,67 +1216,102 @@ AVRASM ver. 2.2.8  C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-t
                                  delay:
                                  	.equ ClockMHz = 16 ; 16MHz
                                  	.equ DelayMs = 2 ; 2ms
-000051 e0d0                      	ldi r29, byte3 (ClockMHz * 1000 * DelayMs / 5)
-000052 e1c9                      	ldi r28, high (ClockMHz * 1000 * DelayMs / 5)
-000053 e0b0                      	ldi r27, low(ClockMHz * 1000 * DelayMs / 5)
+00007f e0d0                      	ldi r29, byte3 (ClockMHz * 1000 * DelayMs / 5)
+000080 e1c9                      	ldi r28, high (ClockMHz * 1000 * DelayMs / 5)
+000081 e0b0                      	ldi r27, low(ClockMHz * 1000 * DelayMs / 5)
                                  	
-000054 50b1                      	subi r27,1
-000055 40c0                      	sbci r28,0
-000056 40d0                      	sbci r29,0
-000057 f7e0                      	brcc pc-3
+000082 50b1                      	subi r27,1
+000083 40c0                      	sbci r28,0
+000084 40d0                      	sbci r29,0
+000085 f7e0                      	brcc pc-3
                                  
-000058 9508                      	ret
+000086 9508                      	ret
                                  ;________________________________________
                                  
                                  
                                  STATE0:
-000059 e0f0                      	ldi ZH, high(Table_States+0<<1)  
-00005a e3e0                          ldi ZL, low(Table_States+0<<1)
-00005b 9135                          lpm current_stateH, Z+
-00005c 9144                      	lpm current_stateL, Z
-00005d 9508                      	ret
+000087 e06e                      	ldi change_timer_timer, 14
+                                 
+000088 e0f0                      	ldi ZH, high(Table_States+0<<1)  
+000089 e3e0                          ldi ZL, low(Table_States+0<<1)
+00008a 9135                          lpm current_stateH, Z+
+00008b 9144                      	lpm current_stateL, Z
+                                 
+00008c dfef                      	rcall clear_CUD
+00008d dfeb                      	rcall clear_CTD
+00008e 9508                      	ret
                                  
                                  STATE1:
-00005e e0f0                      	ldi ZH, high(Table_States+1<<1)  
-00005f e3e2                          ldi ZL, low(Table_States+1<<1)
-000060 9135                          lpm current_stateH, Z+
-000061 9144                      	lpm current_stateL, Z
-000062 9508                      	ret
+00008f e169                      	ldi change_timer_timer, 25
+                                 
+000090 e0f0                      	ldi ZH, high(Table_States+1<<1)  
+000091 e3e2                          ldi ZL, low(Table_States+1<<1)
+000092 9135                          lpm current_stateH, Z+
+000093 9144                      	lpm current_stateL, Z
+                                 
+000094 dfe7                      	rcall clear_CUD
+000095 dfe3                      	rcall clear_CTD
+000096 9508                      	ret
                                  
                                  STATE2:
-000063 e0f0                      	ldi ZH, high(Table_States+2<<1)  
-000064 e3e4                          ldi ZL, low(Table_States+2<<1)
-000065 9135                          lpm current_stateH, Z+
-000066 9144                      	lpm current_stateL, Z
-000067 9508                      	ret
+000097 e064                      	ldi change_timer_timer, 4
+                                 
+000098 e0f0                      	ldi ZH, high(Table_States+2<<1)  
+000099 e3e4                          ldi ZL, low(Table_States+2<<1)
+00009a 9135                          lpm current_stateH, Z+
+00009b 9144                      	lpm current_stateL, Z
+                                 
+00009c dfdf                      	rcall clear_CUD
+00009d dfdb                      	rcall clear_CTD
+00009e 9508                      	ret
                                  
                                  STATE3:
-000068 e0f0                      	ldi ZH, high(Table_States+3<<1)  
-000069 e3e6                          ldi ZL, low(Table_States+3<<1)
-00006a 9135                          lpm current_stateH, Z+
-00006b 9144                      	lpm current_stateL, Z
-00006c 9508                      	ret
+00009f e36c                      	ldi change_timer_timer, 60
+                                 
+0000a0 e0f0                      	ldi ZH, high(Table_States+3<<1)  
+0000a1 e3e6                          ldi ZL, low(Table_States+3<<1)
+0000a2 9135                          lpm current_stateH, Z+
+0000a3 9144                      	lpm current_stateL, Z
+                                 
+0000a4 dfd7                      	rcall clear_CUD
+0000a5 dfd3                      	rcall clear_CTD
+0000a6 9508                      	ret
                                  
                                  STATE4:
-00006d e0f0                      	ldi ZH, high(Table_States+4<<1)  
-00006e e3e8                          ldi ZL, low(Table_States+4<<1)
-00006f 9135                          lpm current_stateH, Z+
-000070 9144                      	lpm current_stateL, Z
-000071 9508                      	ret
+0000a7 e064                      	ldi change_timer_timer, 4
+                                 
+0000a8 e0f0                      	ldi ZH, high(Table_States+4<<1)  
+0000a9 e3e8                          ldi ZL, low(Table_States+4<<1)
+0000aa 9135                          lpm current_stateH, Z+
+0000ab 9144                      	lpm current_stateL, Z
+                                 
+0000ac dfcf                      	rcall clear_CUD
+0000ad dfcb                      	rcall clear_CTD
+0000ae 9508                      	ret
                                  
                                  STATE5:
-000072 e0f0                      	ldi ZH, high(Table_States+5<<1)  
-000073 e3ea                          ldi ZL, low(Table_States+5<<1)
-000074 9135                          lpm current_stateH, Z+
-000075 9144                      	lpm current_stateL, Z
-000076 9508                      	ret
+0000af e169                      	ldi change_timer_timer, 25
+                                 
+0000b0 e0f0                      	ldi ZH, high(Table_States+5<<1)  
+0000b1 e3ea                          ldi ZL, low(Table_States+5<<1)
+0000b2 9135                          lpm current_stateH, Z+
+0000b3 9144                      	lpm current_stateL, Z
+                                 
+0000b4 dfc7                      	rcall clear_CUD
+0000b5 dfc3                      	rcall clear_CTD
+0000b6 9508                      	ret
                                  
                                  STATE6:
-000077 e0f0                      	ldi ZH, high(Table_States+6<<1)  
-000078 e3ec                          ldi ZL, low(Table_States+6<<1)
-000079 9135                          lpm current_stateH, Z+
-00007a 9144                      	lpm current_stateL, Z
-00007b 9508                      	ret
+0000b7 e064                      	ldi change_timer_timer, 4
+                                 
+0000b8 e0f0                      	ldi ZH, high(Table_States+6<<1)  
+0000b9 e3ec                          ldi ZL, low(Table_States+6<<1)
+0000ba 9135                          lpm current_stateH, Z+
+0000bb 9144                      	lpm current_stateL, Z
+                                 
+0000bc dfbf                      	rcall clear_CUD
+0000bd dfbb                      	rcall clear_CTD
+0000be 9508                      	ret
 
 
 RESOURCE USE INFORMATION
@@ -1266,10 +1331,10 @@ counted separately from r26..r31 here.
 "ATmega328P" register use summary:
 x  :   0 y  :   0 z  :  14 r0 :   0 r1 :   0 r2 :   0 r3 :   0 r4 :   0 
 r5 :   0 r6 :   0 r7 :   0 r8 :   0 r9 :   0 r10:   0 r11:   0 r12:   0 
-r13:   0 r14:   0 r15:   0 r16:   5 r17:   8 r18:  12 r19:   8 r20:   8 
-r21:   2 r22:   0 r23:   0 r24:   0 r25:   0 r26:   0 r27:   2 r28:   2 
+r13:   0 r14:   0 r15:   0 r16:   5 r17:   8 r18:  30 r19:   8 r20:   8 
+r21:  11 r22:   9 r23:   0 r24:   0 r25:   0 r26:   0 r27:   2 r28:   2 
 r29:   2 r30:   7 r31:   7 
-Registers used: 12 out of 35 (34.3%)
+Registers used: 13 out of 35 (37.1%)
 
 "ATmega328P" instruction use summary:
 .lds  :   0 .sts  :   0 adc   :   0 add   :   0 adiw  :   0 and   :   0 
@@ -1280,23 +1345,23 @@ brne  :   2 brpl  :   0 brsh  :   0 brtc  :   0 brts  :   0 brvc  :   0
 brvs  :   0 bset  :   0 bst   :   0 call  :   0 cbi   :   0 cbr   :   0 
 clc   :   0 clh   :   0 cli   :   0 cln   :   0 clr   :   0 cls   :   0 
 clt   :   0 clv   :   0 clz   :   0 com   :   0 cp    :   0 cpc   :   0 
-cpi   :   2 cpse  :   0 dec   :   0 eor   :   0 fmul  :   0 fmuls :   0 
-fmulsu:   0 icall :   0 ijmp  :   0 in    :   0 inc   :   3 jmp   :   3 
-ld    :   0 ldd   :   0 ldi   :  25 lds   :   1 lpm   :  21 lsl   :   0 
+cpi   :   2 cpse  :   9 dec   :   0 eor   :   0 fmul  :   0 fmuls :   0 
+fmulsu:   0 icall :   0 ijmp  :   0 in    :   0 inc   :   3 jmp   :  12 
+ld    :   0 ldd   :   0 ldi   :  42 lds   :   1 lpm   :  21 lsl   :   0 
 lsr   :   0 mov   :   0 movw  :   0 mul   :   0 muls  :   0 mulsu :   0 
 neg   :   0 nop   :   0 or    :   0 ori   :   2 out   :   7 pop   :   0 
-push  :   0 rcall :   7 ret   :  10 reti  :   1 rjmp  :   0 rol   :   0 
+push  :   0 rcall :  29 ret   :  10 reti  :   1 rjmp  :   0 rol   :   0 
 ror   :   0 sbc   :   0 sbci  :   2 sbi   :   0 sbic  :   0 sbis  :   0 
 sbiw  :   0 sbr   :   1 sbrc  :   0 sbrs  :   0 sec   :   0 seh   :   0 
 sei   :   1 sen   :   0 ser   :   0 ses   :   0 set   :   0 sev   :   0 
 sez   :   0 sleep :   0 spm   :   0 st    :   0 std   :   0 sts   :   5 
-sub   :   0 subi  :   1 swap  :   0 tst   :   0 wdr   :   0 
-Instructions used: 18 out of 113 (15.9%)
+sub   :   0 subi  :   2 swap  :   0 tst   :   0 wdr   :   0 
+Instructions used: 19 out of 113 (16.8%)
 
 "ATmega328P" memory use summary [bytes]:
 Segment   Begin    End      Code   Data   Used    Size   Use%
 ---------------------------------------------------------------
-[.cseg] 0x000000 0x0000f8    194     14    208   32768   0.6%
+[.cseg] 0x000000 0x00017e    328     14    342   32768   1.0%
 [.dseg] 0x000100 0x000100      0      0      0    2048   0.0%
 [.eseg] 0x000000 0x000000      0      0      0    1024   0.0%
 

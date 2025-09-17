@@ -6,6 +6,7 @@
 .def current_stateH = r19
 .def current_stateL = r20
 .def state = r21
+.def change_timer_timer = r22
 
 ; _______________________________________
 ;|            Interrupt Vector           |
@@ -90,8 +91,6 @@ RESET:
 	;|_______________________________________|
 
 	ldi state, 0
-	; ldi current_stateL, 0b00100100
-	; ldi current_stateH, 0b00100100
 	rcall clear_CUD
 	rcall clear_CTD
 
@@ -128,25 +127,56 @@ RESET:
 ;|   Timer1 Interrupt Service Routine    |
 ;|_______________________________________|
 TIMER_ISR:
+	subi change_timer_timer, 1
+
+	; Compare
+	ldi temp, 0
+	cpse change_timer_timer, temp
+	jmp CONTINUE
 	inc state
 
-	;ldi temp, 0
-	;cpse state, temp
-   ; breq STATE0_CALL
-	;cpi state, 1
-    ;breq STATE1
-	;cpi state, 2
-    ;breq STATE2
-	;cpi state, 3
-    ;breq STATE3
-	;cpi state, 4
-    ;breq STATE4
-	;cpi state, 5
-    ;breq STATE5
-	;cpi state, 6
-    ;breq STATE6
-	;cpi state, 0
-	
+	TEST0:
+	ldi temp, 0
+	cpse state, temp
+	jmp TEST1
+	rcall STATE0
+	TEST1:
+	ldi temp, 1
+	cpse state, temp
+	jmp TEST2
+	rcall STATE1
+	TEST2:
+	ldi temp, 2
+	cpse state, temp
+	jmp TEST3
+	rcall STATE2
+	TEST3:
+	ldi temp, 3
+	cpse state, temp
+	jmp TEST4
+	rcall STATE3
+	TEST4:
+	ldi temp, 4
+	cpse state, temp
+	jmp TEST5
+	rcall STATE4
+	TEST5:
+	ldi temp, 5
+	cpse state, temp
+	jmp TEST6
+	rcall STATE5
+	TEST6:
+	ldi temp, 6
+	cpse state, temp
+	jmp TEST7
+	rcall STATE6
+	TEST7:
+	ldi temp, 7
+	cpse state, temp
+	jmp CONTINUE
+	ldi state, 0
+	rcall STATE0
+	CONTINUE:
 
 	inc led1
 	;	Compare Clock Unit Value to 9
@@ -209,50 +239,85 @@ delay:
 
 
 STATE0:
+	ldi change_timer_timer, 14
+
 	ldi ZH, high(Table_States+0<<1)  
     ldi ZL, low(Table_States+0<<1)
     lpm current_stateH, Z+
 	lpm current_stateL, Z
+
+	rcall clear_CUD
+	rcall clear_CTD
 	ret
 
 STATE1:
+	ldi change_timer_timer, 25
+
 	ldi ZH, high(Table_States+1<<1)  
     ldi ZL, low(Table_States+1<<1)
     lpm current_stateH, Z+
 	lpm current_stateL, Z
+
+	rcall clear_CUD
+	rcall clear_CTD
 	ret
 
 STATE2:
+	ldi change_timer_timer, 4
+
 	ldi ZH, high(Table_States+2<<1)  
     ldi ZL, low(Table_States+2<<1)
     lpm current_stateH, Z+
 	lpm current_stateL, Z
+
+	rcall clear_CUD
+	rcall clear_CTD
 	ret
 
 STATE3:
+	ldi change_timer_timer, 60
+
 	ldi ZH, high(Table_States+3<<1)  
     ldi ZL, low(Table_States+3<<1)
     lpm current_stateH, Z+
 	lpm current_stateL, Z
+
+	rcall clear_CUD
+	rcall clear_CTD
 	ret
 
 STATE4:
+	ldi change_timer_timer, 4
+
 	ldi ZH, high(Table_States+4<<1)  
     ldi ZL, low(Table_States+4<<1)
     lpm current_stateH, Z+
 	lpm current_stateL, Z
+
+	rcall clear_CUD
+	rcall clear_CTD
 	ret
 
 STATE5:
+	ldi change_timer_timer, 25
+
 	ldi ZH, high(Table_States+5<<1)  
     ldi ZL, low(Table_States+5<<1)
     lpm current_stateH, Z+
 	lpm current_stateL, Z
+
+	rcall clear_CUD
+	rcall clear_CTD
 	ret
 
 STATE6:
+	ldi change_timer_timer, 4
+
 	ldi ZH, high(Table_States+6<<1)  
     ldi ZL, low(Table_States+6<<1)
     lpm current_stateH, Z+
 	lpm current_stateL, Z
+
+	rcall clear_CUD
+	rcall clear_CTD
 	ret
