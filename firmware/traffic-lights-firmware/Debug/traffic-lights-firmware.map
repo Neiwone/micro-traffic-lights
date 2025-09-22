@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm Wed Sep 17 11:41:30 2025
+AVRASM ver. 2.2.8  C:\Users\JoséFélixNeto\OneDrive - edge.ufal.br\Documentos\UFAL\Microcontroladores\Projeto\micro-traffic-lights\firmware\traffic-lights-firmware\main.asm Mon Sep 22 13:54:49 2025
 
 
 EQU  SIGNATURE_000 0000001e
@@ -702,33 +702,35 @@ DEF  current_stateH r19
 DEF  current_stateL r20
 DEF  state        r21
 DEF  change_timer_timer r22
-CSEG RESET        0000001f
-CSEG TIMER_ISR    00000041
+CSEG RESET        0000006c
+CSEG TIMER_ISR    00000098
 CSEG Table_States 00000018
+CSEG states_strings 0000001f
+EQU  UBRRvalue    00000067
 EQU  PRESCALE     00000005
 EQU  PRESCALE_DIV 00000400
 EQU  WGM          00000004
 EQU  TOP          00003d09
-CSEG clear_CUD    0000007c
-CSEG clear_CTD    00000079
-CSEG STATE0       00000087
-CSEG main         00000039
-CSEG delay        0000007f
-CSEG CONTINUE     00000070
-CSEG TEST0        00000047
-CSEG TEST1        0000004c
-CSEG TEST2        00000051
-CSEG STATE1       0000008f
-CSEG TEST3        00000056
-CSEG STATE2       00000097
-CSEG TEST4        0000005b
-CSEG STATE3       0000009f
-CSEG TEST5        00000060
-CSEG STATE4       000000a7
-CSEG TEST6        00000065
-CSEG STATE5       000000af
-CSEG TEST7        0000006a
-CSEG STATE6       000000b7
-CSEG exit_T1ISR   00000078
+CSEG clear_CUD    000000d3
+CSEG clear_CTD    000000d0
+CSEG STATE0       000000de
+CSEG main         00000090
+CSEG delay        000000d6
+CSEG CONTINUE     000000c7
+CSEG TEST0        0000009e
+CSEG TEST1        000000a3
+CSEG TEST2        000000a8
+CSEG STATE1       000000e6
+CSEG TEST3        000000ad
+CSEG STATE2       000000ee
+CSEG TEST4        000000b2
+CSEG STATE3       000000f6
+CSEG TEST5        000000b7
+CSEG STATE4       000000fe
+CSEG TEST6        000000bc
+CSEG STATE5       00000106
+CSEG TEST7        000000c1
+CSEG STATE6       0000010e
+CSEG exit_T1ISR   000000cf
 EQU  ClockMHz     00000010
 EQU  DelayMs      00000002

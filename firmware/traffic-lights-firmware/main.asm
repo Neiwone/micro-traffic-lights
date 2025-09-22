@@ -8,6 +8,7 @@
 .def state = r21
 .def change_timer_timer = r22
 
+
 ; _______________________________________
 ;|            Interrupt Vector           |
 ;|_______________________________________|
@@ -34,7 +35,40 @@ jmp TIMER_ISR
 Table_States:
 .dw 0b1001000000100100, 0b0010010000100100, 0b0100010000100100, 0b1000010000100001, 0b1000100000100010, 0b1001000000001100, 0b1001000000010100
 
+; _______________________________________
+;|          Defining States String       |
+;|---------------------------------------|
+;|    state0: “S0:R, S1:R, S2:R, S3:R”   |
+;|    state1: “S0:G, S1:G, S2:R, S3:R”   |
+;|    state2: “S0:G, S1:Y, S2:R, S3:R”   |
+;|    state3: “S0:G, S1:R, S2:G, S3:R”   |
+;|    state4: “S0:Y, S1:R, S2:Y, S3:R”   |
+;|    state5: “S0:R, S1:R, S2:R, S3:G”   |
+;|    state6: “S0:R, S1:R, S2:R, S3:Y”   |
+;|_______________________________________|
+
+states_strings:
+	.db "S0:R, S1:R, S2:R, S3:R", "S0:G, S1:Y, S2:R, S3:R", "S0:G, S1:R, S2:R, S3:R", "S0:G, S1:R, S2:G, S3:R", "S0:Y, S1:R, S2:Y, S3:R", "S0:R, S1:R, S2:R, S3:G", "S0:R, S1:R, S2:R, S3:Y"
+
 RESET:
+	; _______________________________________
+	;|            Setup of USART0			 |
+	;|_______________________________________|
+	;
+
+	.equ UBRRvalue = 103 ;16 mhz clock speed, 9600 baud UBRR = 103
+
+	ldi temp, high (UBRRvalue)  
+	sts UBRR0H, temp
+	ldi temp, low (UBRRvalue)
+	sts UBRR0L, temp
+
+	; 8 bits, 1 stop, no parity, asynchronous mode
+	ldi temp, (3<<UCSZ00)
+	sts UCSR0C, temp
+
+	ldi temp, (0 << RXEN0) | (1 << TXEN0) ; TX Enable
+
 	; _______________________________________
 	;|         Timer/Counter 1 Setup         |
 	;|_______________________________________|
