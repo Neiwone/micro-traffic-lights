@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm Wed Sep 24 10:53:32 2025
+AVRASM ver. 2.2.8  C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm Wed Sep 24 13:13:29 2025
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328Pdef.inc'
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328Pdef.inc'
@@ -989,10 +989,10 @@ AVRASM ver. 2.2.8  C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-t
                                  .def temp = r18 ;	Temporary Register
                                  
                                  
-                                 .def current_stateH = r19
-                                 .def current_stateL = r20
-                                 .def state = r21
-                                 .def change_state_timer = r22
+                                 .def current_stateH = r19 ;		Traffic lights 3 and 4 signal
+                                 .def current_stateL = r20 ;		Traffic lights 1 and 2 signal
+                                 .def state = r21          ;		Current state
+                                 .def change_state_timer = r22 ;	Remaining seconds to change between states
                                  
                                  
                                  ; _______________________________________
@@ -1002,7 +1002,7 @@ AVRASM ver. 2.2.8  C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-t
                                  .org 0x0000
 000000 940c 006c                 jmp RESET
                                  .org OC1Aaddr
-000016 940c 0098                 jmp TIMER_ISR
+000016 940c 00c4                 jmp TIMER_ISR
                                  
                                  
                                  
@@ -1122,7 +1122,6 @@ AVRASM ver. 2.2.8  C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-t
                                  	; _______________________________________
                                  	;|            Setup of USART0			 |
                                  	;|_______________________________________|
-                                 	;
                                  
                                  	.equ UBRRvalue = 103 ;16 mhz clock speed, 9600 baud UBRR = 103
                                  
@@ -1192,10 +1191,10 @@ AVRASM ver. 2.2.8  C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-t
                                  	;|_______________________________________|
                                  
 00008c e051                      	ldi state, 1
-00008d d045                      	rcall clear_CUD
-00008e d041                      	rcall clear_CTD
+00008d d043                      	rcall clear_CUD
+00008e d03f                      	rcall clear_CTD
                                  
-00008f d054                      	rcall STATE1
+00008f d052                      	rcall STATE1
                                  
                                  	;________________________________________
                                  
@@ -1208,17 +1207,67 @@ AVRASM ver. 2.2.8  C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-t
                                  	;\~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~/
                                  
                                  	main:
+                                 		;	Compare if is time to change state
+000090 2366                      		tst change_state_timer
+000091 f551                      		brne CONTINUE
+000092 9553                      		inc state
+                                 
+                                 		; if is time to change state, which state should we go now?
+                                 		; here we find out by the ´state´ variable
+                                 		TEST0:
+000093 e020                      		ldi temp, 0
+000094 1352                      		cpse state, temp
+000095 940c 0098                 		jmp TEST1
+000097 d044                      		rcall STATE0
+                                 		TEST1:
+000098 e021                      		ldi temp, 1
+000099 1352                      		cpse state, temp
+00009a 940c 009d                 		jmp TEST2
+00009c d045                      		rcall STATE1
+                                 		TEST2:
+00009d e022                      		ldi temp, 2
+00009e 1352                      		cpse state, temp
+00009f 940c 00a2                 		jmp TEST3
+0000a1 d04a                      		rcall STATE2
+                                 		TEST3:
+0000a2 e023                      		ldi temp, 3
+0000a3 1352                      		cpse state, temp
+0000a4 940c 00a7                 		jmp TEST4
+0000a6 d04b                      		rcall STATE3
+                                 		TEST4:
+0000a7 e024                      		ldi temp, 4
+0000a8 1352                      		cpse state, temp
+0000a9 940c 00ac                 		jmp TEST5
+0000ab d04c                      		rcall STATE4
+                                 		TEST5:
+0000ac e025                      		ldi temp, 5
+0000ad 1352                      		cpse state, temp
+0000ae 940c 00b1                 		jmp TEST6
+0000b0 d051                      		rcall STATE5
+                                 		TEST6:
+0000b1 e026                      		ldi temp, 6
+0000b2 1352                      		cpse state, temp
+0000b3 940c 00b6                 		jmp TEST7
+0000b5 d056                      		rcall STATE6
+                                 		TEST7:
+0000b6 e027                      		ldi temp, 7
+0000b7 1352                      		cpse state, temp
+0000b8 940c 00bc                 		jmp CONTINUE
+0000ba e050                      		ldi state, 0
+0000bb d020                      		rcall STATE0
+                                 
+                                 		CONTINUE:
                                  		; Send traffic lights signals by PORTD & PORTB
-000090 b935                      		out PORTB, current_stateH
-000091 b94b                      		out PORTD, current_stateL
+0000bc b935                      		out PORTB, current_stateH
+0000bd b94b                      		out PORTD, current_stateL
                                  		
                                  		; Send timer display signals by PORTC
-000092 b908                      		out PORTC, led0
-000093 d042                      		rcall delay
-000094 b918                      		out PORTC, led1
-000095 d040                      		rcall delay
+0000be b908                      		out PORTC, led0
+0000bf d014                      		rcall delay
+0000c0 b918                      		out PORTC, led1
+0000c1 d012                      		rcall delay
                                  
-000096 940c 0090                 		jmp main
+0000c2 940c 0090                 		jmp main
                                  
                                  	;_________________________________________
                                  
@@ -1227,78 +1276,28 @@ AVRASM ver. 2.2.8  C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-t
                                  ; _______________________________________
                                  ;|   Timer1 Interrupt Service Routine    |
                                  ;|_______________________________________|
+                                 
                                  TIMER_ISR:
-000098 5061                      	subi change_state_timer, 1
+0000c4 5061                      	subi change_state_timer, 1
                                  
-                                 	;	Compare if is time to change state
-000099 e020                      	ldi temp, 0
-00009a 1362                      	cpse change_state_timer, temp
-00009b 940c 00c7                 	jmp CONTINUE
-00009d 9553                      	inc state
-                                 
-                                 	; if is time to change state, which state should we go now?
-                                 	; here we find out by the ´state´ variable
-                                 	TEST0:
-00009e e020                      	ldi temp, 0
-00009f 1352                      	cpse state, temp
-0000a0 940c 00a3                 	jmp TEST1
-0000a2 d03b                      	rcall STATE0
-                                 	TEST1:
-0000a3 e021                      	ldi temp, 1
-0000a4 1352                      	cpse state, temp
-0000a5 940c 00a8                 	jmp TEST2
-0000a7 d03c                      	rcall STATE1
-                                 	TEST2:
-0000a8 e022                      	ldi temp, 2
-0000a9 1352                      	cpse state, temp
-0000aa 940c 00ad                 	jmp TEST3
-0000ac d041                      	rcall STATE2
-                                 	TEST3:
-0000ad e023                      	ldi temp, 3
-0000ae 1352                      	cpse state, temp
-0000af 940c 00b2                 	jmp TEST4
-0000b1 d042                      	rcall STATE3
-                                 	TEST4:
-0000b2 e024                      	ldi temp, 4
-0000b3 1352                      	cpse state, temp
-0000b4 940c 00b7                 	jmp TEST5
-0000b6 d043                      	rcall STATE4
-                                 	TEST5:
-0000b7 e025                      	ldi temp, 5
-0000b8 1352                      	cpse state, temp
-0000b9 940c 00bc                 	jmp TEST6
-0000bb d048                      	rcall STATE5
-                                 	TEST6:
-0000bc e026                      	ldi temp, 6
-0000bd 1352                      	cpse state, temp
-0000be 940c 00c1                 	jmp TEST7
-0000c0 d04d                      	rcall STATE6
-                                 	TEST7:
-0000c1 e027                      	ldi temp, 7
-0000c2 1352                      	cpse state, temp
-0000c3 940c 00c7                 	jmp CONTINUE
-0000c5 e050                      	ldi state, 0
-0000c6 d017                      	rcall STATE0
-                                 
-                                 	CONTINUE:
                                  	;	Count down by 1 on the display
-0000c7 951a                      	dec led1
+0000c5 951a                      	dec led1
                                  	;	Compare Clock Unit Value to 31
-0000c8 311f                      	cpi led1, 0b00011111
-0000c9 f429                      	brne exit_T1ISR
+0000c6 311f                      	cpi led1, 0b00011111
+0000c7 f429                      	brne exit_T1ISR
                                  
                                  	;	Reset Clock Unit Value
-0000ca d008                      	rcall clear_CUD
-0000cb 950a                      	dec led0
+0000c8 d008                      	rcall clear_CUD
+0000c9 950a                      	dec led0
                                  	;	Compare Clock Ten Value to 15
-0000cc 300f                      	cpi led0, 0b00001111
-0000cd f409                      	brne exit_T1ISR
+0000ca 300f                      	cpi led0, 0b00001111
+0000cb f409                      	brne exit_T1ISR
                                  
                                  	;	Reset Clock Ten Value
-0000ce d001                      	rcall clear_CTD
+0000cc d001                      	rcall clear_CTD
                                  
                                  	exit_T1ISR: 
-0000cf 9518                      		reti
+0000cd 9518                      		reti
                                  
                                  ; _______________________________________
                                  ;|         Start Timer Definition        |
@@ -1307,18 +1306,18 @@ AVRASM ver. 2.2.8  C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-t
                                  ; > TENS DISPLAY
                                  clear_CTD:
                                  ;	Start with 9
-0000d0 e009                      ldi led0, 0b00001001
+0000ce e009                      ldi led0, 0b00001001
                                  ;	Set transistor value of Clock Tens Display to 1 
-0000d1 6100                      ori led0, 1 << 4
-0000d2 9508                      ret
+0000cf 6100                      ori led0, 1 << 4
+0000d0 9508                      ret
                                  
                                  ; > UNITS DISPLAY
                                  clear_CUD:
                                  ;	Start with 9
-0000d3 e019                      ldi led1, 0b00001001
+0000d1 e019                      ldi led1, 0b00001001
                                  ;	Set transistor value of Clock Units Display to 1 
-0000d4 6210                      ori led1, 1 << 5
-0000d5 9508                      ret
+0000d2 6210                      ori led1, 1 << 5
+0000d3 9508                      ret
                                  ;________________________________________
                                  
                                  ; _______________________________________
@@ -1329,122 +1328,194 @@ AVRASM ver. 2.2.8  C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-t
                                  delay:
                                  	.equ ClockMHz = 16 ; 16MHz
                                  	.equ DelayMs = 1 ; 2ms
-0000d6 e0d0                      	ldi r29, byte3 (ClockMHz * 1000 * DelayMs / 5)
-0000d7 e0cc                      	ldi r28, high (ClockMHz * 1000 * DelayMs / 5)
-0000d8 e8b0                      	ldi r27, low(ClockMHz * 1000 * DelayMs / 5)
+0000d4 e0d0                      	ldi r29, byte3 (ClockMHz * 1000 * DelayMs / 5)
+0000d5 e0cc                      	ldi r28, high (ClockMHz * 1000 * DelayMs / 5)
+0000d6 e8b0                      	ldi r27, low(ClockMHz * 1000 * DelayMs / 5)
                                  	
-0000d9 50b1                      	subi r27,1
-0000da 40c0                      	sbci r28,0
-0000db 40d0                      	sbci r29,0
-0000dc f7e0                      	brcc pc-3
+0000d7 50b1                      	subi r27,1
+0000d8 40c0                      	sbci r28,0
+0000d9 40d0                      	sbci r29,0
+0000da f7e0                      	brcc pc-3
                                  
-0000dd 9508                      	ret
+0000db 9508                      	ret
                                  ;________________________________________
                                  
-                                 
+                                 ; ________________________________________
+                                 ;|		 		 State 0				  |
+                                 ;|----------------------------------------|
+                                 ;|  All lights are red                    |
+                                 ;|                                        |
+                                 ;|  - Load ´change_state_timer´ with 15s  |
+                                 ;|  - Reload Z pointer with a new address |
+                                 ;|________________________________________|
                                  STATE0:
-0000de e06f                      	ldi change_state_timer, 15
+0000dc e06f                      	ldi change_state_timer, 15
                                  
-0000df e0f0                      	ldi ZH, high(Table_States+0<<1)  
-0000e0 e3e0                          ldi ZL, low(Table_States+0<<1)
-0000e1 9135                          lpm current_stateH, Z+
-0000e2 9144                      	lpm current_stateL, Z
+                                 	; Load traffic lights signal distribution from memory
+0000dd e0f0                      	ldi ZH, high(Table_States+0<<1)  
+0000de e3e0                          ldi ZL, low(Table_States+0<<1)
+0000df 9135                          lpm current_stateH, Z+
+0000e0 9144                      	lpm current_stateL, Z
                                  
-0000e3 9508                      	ret
+0000e1 9508                      	ret
                                  
+                                 ; ________________________________________
+                                 ;|		 		 State 1				  |
+                                 ;|----------------------------------------|
+                                 ;|  Traffic lights:                       |
+                                 ;|   > 1 and 2 are green                  |
+                                 ;|   > 3 and 4 are red                    |
+                                 ;|                                        |
+                                 ;|  - Load ´change_state_timer´ with 25s  |
+                                 ;|  - Reload Z pointer with a new address |
+                                 ;|  - Change display start value          |
+                                 ;|________________________________________|
                                  STATE1:
-0000e4 e169                      	ldi change_state_timer, 25
+0000e2 e169                      	ldi change_state_timer, 25
                                  
-0000e5 e0f0                      	ldi ZH, high(Table_States+1<<1)  
-0000e6 e3e2                          ldi ZL, low(Table_States+1<<1)
-0000e7 9135                          lpm current_stateH, Z+
-0000e8 9144                      	lpm current_stateL, Z
+0000e3 e0f0                      	ldi ZH, high(Table_States+1<<1)  
+0000e4 e3e2                          ldi ZL, low(Table_States+1<<1)
+0000e5 9135                          lpm current_stateH, Z+
+0000e6 9144                      	lpm current_stateL, Z
                                  
                                  	;	Count down 90 sec
                                  
                                  	;	Load 9 on led0
-0000e9 e009                      	ldi led0, 0b00001001
+0000e7 e009                      	ldi led0, 0b00001001
                                  	;	Set transistor value of Clock Tens Display to 1 
-0000ea 6100                      	ori led0, 1 << 4
+0000e8 6100                      	ori led0, 1 << 4
                                  
                                  	;	Load 0 on led1
-0000eb e010                      	ldi led1, 0b00000000
+0000e9 e010                      	ldi led1, 0b00000000
                                  	;	Set transistor value of Clock Units Display to 1 
-0000ec 6210                      	ori led1, 1 << 5
+0000ea 6210                      	ori led1, 1 << 5
                                  
-0000ed 9508                      	ret
+0000eb 9508                      	ret
                                  
+                                 ; ________________________________________
+                                 ;|		 		 State 2				  |
+                                 ;|----------------------------------------|
+                                 ;|  Traffic lights:                       |
+                                 ;|   > 1 is green                         |
+                                 ;|   > 2 is yellow                        |
+                                 ;|   > 3 and 4 are red                    |
+                                 ;|                                        |
+                                 ;|  - Load ´change_state_timer´ with 5s   |
+                                 ;|  - Reload Z pointer with a new address |
+                                 ;|________________________________________|
                                  STATE2:
-0000ee e065                      	ldi change_state_timer, 5
+0000ec e065                      	ldi change_state_timer, 5
                                  
-0000ef e0f0                      	ldi ZH, high(Table_States+2<<1)  
-0000f0 e3e4                          ldi ZL, low(Table_States+2<<1)
-0000f1 9135                          lpm current_stateH, Z+
-0000f2 9144                      	lpm current_stateL, Z
+0000ed e0f0                      	ldi ZH, high(Table_States+2<<1)  
+0000ee e3e4                          ldi ZL, low(Table_States+2<<1)
+0000ef 9135                          lpm current_stateH, Z+
+0000f0 9144                      	lpm current_stateL, Z
                                  
-0000f3 9508                      	ret
+0000f1 9508                      	ret
                                  
+                                 ; ________________________________________
+                                 ;|		 		 State 3				  |
+                                 ;|----------------------------------------|
+                                 ;|  Traffic lights:                       |
+                                 ;|   > 1 and 3 are green                  |
+                                 ;|   > 2 and 4 are red                    |
+                                 ;|                                        |
+                                 ;|  - Load ´change_state_timer´ with 60s  |
+                                 ;|  - Reload Z pointer with a new address |
+                                 ;|________________________________________|
                                  STATE3:
-0000f4 e36c                      	ldi change_state_timer, 60
+0000f2 e36c                      	ldi change_state_timer, 60
                                  
-0000f5 e0f0                      	ldi ZH, high(Table_States+3<<1)  
-0000f6 e3e6                          ldi ZL, low(Table_States+3<<1)
-0000f7 9135                          lpm current_stateH, Z+
-0000f8 9144                      	lpm current_stateL, Z
+0000f3 e0f0                      	ldi ZH, high(Table_States+3<<1)  
+0000f4 e3e6                          ldi ZL, low(Table_States+3<<1)
+0000f5 9135                          lpm current_stateH, Z+
+0000f6 9144                      	lpm current_stateL, Z
                                  
-0000f9 9508                      	ret
+0000f7 9508                      	ret
                                  
+                                 ; ________________________________________
+                                 ;|		 		 State 4				  |
+                                 ;|----------------------------------------|
+                                 ;|  Traffic lights:                       |
+                                 ;|   > 1 and 3 are yellow                 |
+                                 ;|   > 2 and 4 are red                    |
+                                 ;|                                        |
+                                 ;|  - Load ´change_state_timer´ with 5s   |
+                                 ;|  - Reload Z pointer with a new address |
+                                 ;|  - Change display start value          |
+                                 ;|________________________________________|
                                  STATE4:
-0000fa e065                      	ldi change_state_timer, 5
+0000f8 e065                      	ldi change_state_timer, 5
                                  
-0000fb e0f0                      	ldi ZH, high(Table_States+4<<1)  
-0000fc e3e8                          ldi ZL, low(Table_States+4<<1)
-0000fd 9135                          lpm current_stateH, Z+
-0000fe 9144                      	lpm current_stateL, Z
+0000f9 e0f0                      	ldi ZH, high(Table_States+4<<1)  
+0000fa e3e8                          ldi ZL, low(Table_States+4<<1)
+0000fb 9135                          lpm current_stateH, Z+
+0000fc 9144                      	lpm current_stateL, Z
                                  
                                  	;	Count down 05 sec
                                  
                                  	;	Load 0 on led0
-0000ff e000                      	ldi led0, 0b00000000
+0000fd e000                      	ldi led0, 0b00000000
                                  	;	Set transistor value of Clock Tens Display to 1 
-000100 6100                      	ori led0, 1 << 4
+0000fe 6100                      	ori led0, 1 << 4
                                  
                                  	;	Load 5 on led1
-000101 e015                      	ldi led1, 0b00000101
+0000ff e015                      	ldi led1, 0b00000101
                                  	;	Set transistor value of Clock Units Display to 1 
-000102 6210                      	ori led1, 1 << 5
-000103 9508                      	ret
+000100 6210                      	ori led1, 1 << 5
+000101 9508                      	ret
                                  
+                                 ; ________________________________________
+                                 ;|		 		 State 5				  |
+                                 ;|----------------------------------------|
+                                 ;|  Traffic lights:                       |
+                                 ;|   > 1, 2 and 3 are red                 |
+                                 ;|   > 4 is green                         |
+                                 ;|                                        |
+                                 ;|  - Load ´change_state_timer´ with 25s  |
+                                 ;|  - Reload Z pointer with a new address |
+                                 ;|  - Change display start value          |
+                                 ;|________________________________________|
                                  STATE5:
-000104 e169                      	ldi change_state_timer, 25
+000102 e169                      	ldi change_state_timer, 25
                                  
-000105 e0f0                      	ldi ZH, high(Table_States+5<<1)  
-000106 e3ea                          ldi ZL, low(Table_States+5<<1)
-000107 9135                          lpm current_stateH, Z+
-000108 9144                      	lpm current_stateL, Z
+000103 e0f0                      	ldi ZH, high(Table_States+5<<1)  
+000104 e3ea                          ldi ZL, low(Table_States+5<<1)
+000105 9135                          lpm current_stateH, Z+
+000106 9144                      	lpm current_stateL, Z
                                  
                                  	;	Count down 45 sec
                                  
                                  	;	Load 4 on led0
-000109 e004                      	ldi led0, 0b00000100
+000107 e004                      	ldi led0, 0b00000100
                                  	;	Set transistor value of Clock Tens Display to 1 
-00010a 6100                      	ori led0, 1 << 4
+000108 6100                      	ori led0, 1 << 4
                                  
                                  	;	Load 5 on led1
-00010b e015                      	ldi led1, 0b00000101
+000109 e015                      	ldi led1, 0b00000101
                                  	;	Set transistor value of Clock Units Display to 1 
-00010c 6210                      	ori led1, 1 << 5
-00010d 9508                      	ret
+00010a 6210                      	ori led1, 1 << 5
+00010b 9508                      	ret
                                  
+                                 ; ________________________________________
+                                 ;|		 		 State 5				  |
+                                 ;|----------------------------------------|
+                                 ;|  Traffic lights:                       |
+                                 ;|   > 1, 2 and 3 are red                 |
+                                 ;|   > 4 is yellow                        |
+                                 ;|                                        |
+                                 ;|  - Load ´change_state_timer´ with 5s   |
+                                 ;|  - Reload Z pointer with a new address |
+                                 ;|________________________________________|
                                  STATE6:
-00010e e065                      	ldi change_state_timer, 5
+00010c e065                      	ldi change_state_timer, 5
                                  
-00010f e0f0                      	ldi ZH, high(Table_States+6<<1)  
-000110 e3ec                          ldi ZL, low(Table_States+6<<1)
-000111 9135                          lpm current_stateH, Z+
-000112 9144                      	lpm current_stateL, Z
+00010d e0f0                      	ldi ZH, high(Table_States+6<<1)  
+00010e e3ec                          ldi ZL, low(Table_States+6<<1)
+00010f 9135                          lpm current_stateH, Z+
+000110 9144                      	lpm current_stateL, Z
                                  
-000113 9508                      	ret
+000111 9508                      	ret
 
 
 RESOURCE USE INFORMATION
@@ -1464,7 +1535,7 @@ counted separately from r26..r31 here.
 "ATmega328P" register use summary:
 x  :   0 y  :   0 z  :  14 r0 :   0 r1 :   0 r2 :   0 r3 :   0 r4 :   0 
 r5 :   0 r6 :   0 r7 :   0 r8 :   0 r9 :   0 r10:   0 r11:   0 r12:   0 
-r13:   0 r14:   0 r15:   0 r16:  11 r17:  14 r18:  37 r19:   8 r20:   8 
+r13:   0 r14:   0 r15:   0 r16:  11 r17:  14 r18:  35 r19:   8 r20:   8 
 r21:  11 r22:   9 r23:   0 r24:   0 r25:   0 r26:   0 r27:   2 r28:   2 
 r29:   2 r30:   7 r31:   7 
 Registers used: 13 out of 35 (37.1%)
@@ -1474,13 +1545,13 @@ Registers used: 13 out of 35 (37.1%)
 andi  :   0 asr   :   0 bclr  :   0 bld   :   0 brbc  :   0 brbs  :   0 
 brcc  :   1 brcs  :   0 break :   0 breq  :   0 brge  :   0 brhc  :   0 
 brhs  :   0 brid  :   0 brie  :   0 brlo  :   0 brlt  :   0 brmi  :   0 
-brne  :   2 brpl  :   0 brsh  :   0 brtc  :   0 brts  :   0 brvc  :   0 
+brne  :   3 brpl  :   0 brsh  :   0 brtc  :   0 brts  :   0 brvc  :   0 
 brvs  :   0 bset  :   0 bst   :   0 call  :   0 cbi   :   0 cbr   :   0 
 clc   :   0 clh   :   0 cli   :   0 cln   :   0 clr   :   0 cls   :   0 
 clt   :   0 clv   :   0 clz   :   0 com   :   0 cp    :   0 cpc   :   0 
-cpi   :   2 cpse  :   9 dec   :   2 eor   :   0 fmul  :   0 fmuls :   0 
-fmulsu:   0 icall :   0 ijmp  :   0 in    :   0 inc   :   1 jmp   :  12 
-ld    :   0 ldd   :   0 ldi   :  52 lds   :   1 lpm   :  21 lsl   :   0 
+cpi   :   2 cpse  :   8 dec   :   2 eor   :   0 fmul  :   0 fmuls :   0 
+fmulsu:   0 icall :   0 ijmp  :   0 in    :   0 inc   :   1 jmp   :  11 
+ld    :   0 ldd   :   0 ldi   :  51 lds   :   1 lpm   :  21 lsl   :   0 
 lsr   :   0 mov   :   0 movw  :   0 mul   :   0 muls  :   0 mulsu :   0 
 neg   :   0 nop   :   0 or    :   0 ori   :   8 out   :   7 pop   :   0 
 push  :   0 rcall :  15 ret   :  10 reti  :   1 rjmp  :   0 rol   :   0 
@@ -1488,13 +1559,13 @@ ror   :   0 sbc   :   0 sbci  :   2 sbi   :   0 sbic  :   0 sbis  :   0
 sbiw  :   0 sbr   :   1 sbrc  :   0 sbrs  :   0 sec   :   0 seh   :   0 
 sei   :   1 sen   :   0 ser   :   0 ses   :   0 set   :   0 sev   :   0 
 sez   :   0 sleep :   0 spm   :   0 st    :   0 std   :   0 sts   :   8 
-sub   :   0 subi  :   2 swap  :   0 tst   :   0 wdr   :   0 
-Instructions used: 20 out of 113 (17.7%)
+sub   :   0 subi  :   2 swap  :   0 tst   :   1 wdr   :   0 
+Instructions used: 21 out of 113 (18.6%)
 
 "ATmega328P" memory use summary [bytes]:
 Segment   Begin    End      Code   Data   Used    Size   Use%
 ---------------------------------------------------------------
-[.cseg] 0x000000 0x000228    344    168    512   32768   1.6%
+[.cseg] 0x000000 0x000224    340    168    508   32768   1.6%
 [.dseg] 0x000100 0x000100      0      0      0    2048   0.0%
 [.eseg] 0x000000 0x000000      0      0      0    1024   0.0%
 

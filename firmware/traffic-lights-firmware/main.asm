@@ -3,10 +3,10 @@
 .def temp = r18 ;	Temporary Register
 
 
-.def current_stateH = r19
-.def current_stateL = r20
-.def state = r21
-.def change_state_timer = r22
+.def current_stateH = r19 ;		Traffic lights 3 and 4 signal
+.def current_stateL = r20 ;		Traffic lights 1 and 2 signal
+.def state = r21          ;		Current state
+.def change_state_timer = r22 ;	Remaining seconds to change between states
 
 
 ; _______________________________________
@@ -54,7 +54,6 @@ RESET:
 	; _______________________________________
 	;|            Setup of USART0			 |
 	;|_______________________________________|
-	;
 
 	.equ UBRRvalue = 103 ;16 mhz clock speed, 9600 baud UBRR = 103
 
@@ -141,6 +140,56 @@ RESET:
 	;\~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~/
 
 	main:
+		;	Compare if is time to change state
+		tst change_state_timer
+		brne CONTINUE
+		inc state
+
+		; if is time to change state, which state should we go now?
+		; here we find out by the ´state´ variable
+		TEST0:
+		ldi temp, 0
+		cpse state, temp
+		jmp TEST1
+		rcall STATE0
+		TEST1:
+		ldi temp, 1
+		cpse state, temp
+		jmp TEST2
+		rcall STATE1
+		TEST2:
+		ldi temp, 2
+		cpse state, temp
+		jmp TEST3
+		rcall STATE2
+		TEST3:
+		ldi temp, 3
+		cpse state, temp
+		jmp TEST4
+		rcall STATE3
+		TEST4:
+		ldi temp, 4
+		cpse state, temp
+		jmp TEST5
+		rcall STATE4
+		TEST5:
+		ldi temp, 5
+		cpse state, temp
+		jmp TEST6
+		rcall STATE5
+		TEST6:
+		ldi temp, 6
+		cpse state, temp
+		jmp TEST7
+		rcall STATE6
+		TEST7:
+		ldi temp, 7
+		cpse state, temp
+		jmp CONTINUE
+		ldi state, 0
+		rcall STATE0
+
+		CONTINUE:
 		; Send traffic lights signals by PORTD & PORTB
 		out PORTB, current_stateH
 		out PORTD, current_stateL
@@ -163,57 +212,6 @@ RESET:
 TIMER_ISR:
 	subi change_state_timer, 1
 
-	;	Compare if is time to change state
-	ldi temp, 0
-	cpse change_state_timer, temp
-	jmp CONTINUE
-	inc state
-
-	; if is time to change state, which state should we go now?
-	; here we find out by the ´state´ variable
-	TEST0:
-	ldi temp, 0
-	cpse state, temp
-	jmp TEST1
-	rcall STATE0
-	TEST1:
-	ldi temp, 1
-	cpse state, temp
-	jmp TEST2
-	rcall STATE1
-	TEST2:
-	ldi temp, 2
-	cpse state, temp
-	jmp TEST3
-	rcall STATE2
-	TEST3:
-	ldi temp, 3
-	cpse state, temp
-	jmp TEST4
-	rcall STATE3
-	TEST4:
-	ldi temp, 4
-	cpse state, temp
-	jmp TEST5
-	rcall STATE4
-	TEST5:
-	ldi temp, 5
-	cpse state, temp
-	jmp TEST6
-	rcall STATE5
-	TEST6:
-	ldi temp, 6
-	cpse state, temp
-	jmp TEST7
-	rcall STATE6
-	TEST7:
-	ldi temp, 7
-	cpse state, temp
-	jmp CONTINUE
-	ldi state, 0
-	rcall STATE0
-
-	CONTINUE:
 	;	Count down by 1 on the display
 	dec led1
 	;	Compare Clock Unit Value to 31
@@ -234,24 +232,26 @@ TIMER_ISR:
 		reti
 
 ; _______________________________________
-;|         Start Timer Definition        |
+;|         Clear timer functions         |
+;|---------------------------------------|
+;| clear_CTD: Set display of tens to 9   |
+;| clear_CUD: Set display of units to 9  |
 ;|_______________________________________|
-	
 ; > TENS DISPLAY
 clear_CTD:
-;	Start with 9
-ldi led0, 0b00001001
-;	Set transistor value of Clock Tens Display to 1 
-ori led0, 1 << 4
-ret
+	;	Start with 9
+	ldi led0, 0b00001001
+	;	Set transistor value of Clock Tens Display to 1 
+	ori led0, 1 << 4
+	ret
 
 ; > UNITS DISPLAY
 clear_CUD:
-;	Start with 9
-ldi led1, 0b00001001
-;	Set transistor value of Clock Units Display to 1 
-ori led1, 1 << 5
-ret
+	;	Start with 9
+	ldi led1, 0b00001001
+	;	Set transistor value of Clock Units Display to 1 
+	ori led1, 1 << 5
+	ret
 ;________________________________________
 
 ; _______________________________________
@@ -274,10 +274,18 @@ delay:
 	ret
 ;________________________________________
 
-
+; ________________________________________
+;|		 		 State 0				  |
+;|----------------------------------------|
+;|  All lights are red                    |
+;|                                        |
+;|  - Load ´change_state_timer´ with 15s  |
+;|  - Reload Z pointer with a new address |
+;|________________________________________|
 STATE0:
 	ldi change_state_timer, 15
 
+	; Load traffic lights signal distribution from memory
 	ldi ZH, high(Table_States+0<<1)  
     ldi ZL, low(Table_States+0<<1)
     lpm current_stateH, Z+
@@ -285,6 +293,17 @@ STATE0:
 
 	ret
 
+; ________________________________________
+;|		 		 State 1				  |
+;|----------------------------------------|
+;|  Traffic lights:                       |
+;|   > 1 and 2 are green                  |
+;|   > 3 and 4 are red                    |
+;|                                        |
+;|  - Load ´change_state_timer´ with 25s  |
+;|  - Reload Z pointer with a new address |
+;|  - Change display start value          |
+;|________________________________________|
 STATE1:
 	ldi change_state_timer, 25
 
@@ -307,6 +326,17 @@ STATE1:
 
 	ret
 
+; ________________________________________
+;|		 		 State 2				  |
+;|----------------------------------------|
+;|  Traffic lights:                       |
+;|   > 1 is green                         |
+;|   > 2 is yellow                        |
+;|   > 3 and 4 are red                    |
+;|                                        |
+;|  - Load ´change_state_timer´ with 5s   |
+;|  - Reload Z pointer with a new address |
+;|________________________________________|
 STATE2:
 	ldi change_state_timer, 5
 
@@ -317,6 +347,16 @@ STATE2:
 
 	ret
 
+; ________________________________________
+;|		 		 State 3				  |
+;|----------------------------------------|
+;|  Traffic lights:                       |
+;|   > 1 and 3 are green                  |
+;|   > 2 and 4 are red                    |
+;|                                        |
+;|  - Load ´change_state_timer´ with 60s  |
+;|  - Reload Z pointer with a new address |
+;|________________________________________|
 STATE3:
 	ldi change_state_timer, 60
 
@@ -327,6 +367,17 @@ STATE3:
 
 	ret
 
+; ________________________________________
+;|		 		 State 4				  |
+;|----------------------------------------|
+;|  Traffic lights:                       |
+;|   > 1 and 3 are yellow                 |
+;|   > 2 and 4 are red                    |
+;|                                        |
+;|  - Load ´change_state_timer´ with 5s   |
+;|  - Reload Z pointer with a new address |
+;|  - Change display start value          |
+;|________________________________________|
 STATE4:
 	ldi change_state_timer, 5
 
@@ -348,6 +399,17 @@ STATE4:
 	ori led1, 1 << 5
 	ret
 
+; ________________________________________
+;|		 		 State 5				  |
+;|----------------------------------------|
+;|  Traffic lights:                       |
+;|   > 1, 2 and 3 are red                 |
+;|   > 4 is green                         |
+;|                                        |
+;|  - Load ´change_state_timer´ with 25s  |
+;|  - Reload Z pointer with a new address |
+;|  - Change display start value          |
+;|________________________________________|
 STATE5:
 	ldi change_state_timer, 25
 
@@ -369,6 +431,16 @@ STATE5:
 	ori led1, 1 << 5
 	ret
 
+; ________________________________________
+;|		 		 State 5				  |
+;|----------------------------------------|
+;|  Traffic lights:                       |
+;|   > 1, 2 and 3 are red                 |
+;|   > 4 is yellow                        |
+;|                                        |
+;|  - Load ´change_state_timer´ with 5s   |
+;|  - Reload Z pointer with a new address |
+;|________________________________________|
 STATE6:
 	ldi change_state_timer, 5
 

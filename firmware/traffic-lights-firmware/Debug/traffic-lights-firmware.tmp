@@ -23,29 +23,29 @@
  </OUTPUT_FILES>
  <LABELS>
   <RESET><FILE>C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm</FILE><LINE>53</LINE></RESET>
-  <TIMER_ISR><FILE>C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm</FILE><LINE>163</LINE></TIMER_ISR>
+  <TIMER_ISR><FILE>C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm</FILE><LINE>213</LINE></TIMER_ISR>
   <Table_States><FILE>C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm</FILE><LINE>35</LINE></Table_States>
   <states_strings><FILE>C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm</FILE><LINE>50</LINE></states_strings>
-  <clear_CUD><FILE>C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm</FILE><LINE>249</LINE></clear_CUD>
-  <clear_CTD><FILE>C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm</FILE><LINE>241</LINE></clear_CTD>
-  <STATE1><FILE>C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm</FILE><LINE>288</LINE></STATE1>
-  <main><FILE>C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm</FILE><LINE>143</LINE></main>
-  <delay><FILE>C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm</FILE><LINE>262</LINE></delay>
-  <CONTINUE><FILE>C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm</FILE><LINE>216</LINE></CONTINUE>
-  <TEST0><FILE>C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm</FILE><LINE>174</LINE></TEST0>
-  <TEST1><FILE>C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm</FILE><LINE>179</LINE></TEST1>
-  <STATE0><FILE>C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm</FILE><LINE>278</LINE></STATE0>
-  <TEST2><FILE>C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm</FILE><LINE>184</LINE></TEST2>
-  <TEST3><FILE>C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm</FILE><LINE>189</LINE></TEST3>
-  <STATE2><FILE>C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm</FILE><LINE>310</LINE></STATE2>
-  <TEST4><FILE>C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm</FILE><LINE>194</LINE></TEST4>
-  <STATE3><FILE>C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm</FILE><LINE>320</LINE></STATE3>
-  <TEST5><FILE>C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm</FILE><LINE>199</LINE></TEST5>
-  <STATE4><FILE>C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm</FILE><LINE>330</LINE></STATE4>
-  <TEST6><FILE>C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm</FILE><LINE>204</LINE></TEST6>
-  <STATE5><FILE>C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm</FILE><LINE>351</LINE></STATE5>
-  <TEST7><FILE>C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm</FILE><LINE>209</LINE></TEST7>
-  <STATE6><FILE>C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm</FILE><LINE>372</LINE></STATE6>
-  <exit_T1ISR><FILE>C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm</FILE><LINE>233</LINE></exit_T1ISR>
+  <clear_CUD><FILE>C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm</FILE><LINE>248</LINE></clear_CUD>
+  <clear_CTD><FILE>C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm</FILE><LINE>240</LINE></clear_CTD>
+  <STATE1><FILE>C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm</FILE><LINE>306</LINE></STATE1>
+  <main><FILE>C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm</FILE><LINE>142</LINE></main>
+  <CONTINUE><FILE>C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm</FILE><LINE>192</LINE></CONTINUE>
+  <TEST0><FILE>C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm</FILE><LINE>150</LINE></TEST0>
+  <TEST1><FILE>C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm</FILE><LINE>155</LINE></TEST1>
+  <STATE0><FILE>C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm</FILE><LINE>284</LINE></STATE0>
+  <TEST2><FILE>C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm</FILE><LINE>160</LINE></TEST2>
+  <TEST3><FILE>C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm</FILE><LINE>165</LINE></TEST3>
+  <STATE2><FILE>C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm</FILE><LINE>339</LINE></STATE2>
+  <TEST4><FILE>C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm</FILE><LINE>170</LINE></TEST4>
+  <STATE3><FILE>C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm</FILE><LINE>359</LINE></STATE3>
+  <TEST5><FILE>C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm</FILE><LINE>175</LINE></TEST5>
+  <STATE4><FILE>C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm</FILE><LINE>380</LINE></STATE4>
+  <TEST6><FILE>C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm</FILE><LINE>180</LINE></TEST6>
+  <STATE5><FILE>C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm</FILE><LINE>412</LINE></STATE5>
+  <TEST7><FILE>C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm</FILE><LINE>185</LINE></TEST7>
+  <STATE6><FILE>C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm</FILE><LINE>443</LINE></STATE6>
+  <delay><FILE>C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm</FILE><LINE>261</LINE></delay>
+  <exit_T1ISR><FILE>C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm</FILE><LINE>232</LINE></exit_T1ISR>
  </LABELS>
 </ASSEMBLER_INFO>
