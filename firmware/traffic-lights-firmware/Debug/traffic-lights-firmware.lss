@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm Wed Sep 24 08:10:46 2025
+AVRASM ver. 2.2.8  C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm Wed Sep 24 10:53:32 2025
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328Pdef.inc'
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328Pdef.inc'
@@ -992,7 +992,7 @@ AVRASM ver. 2.2.8  C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-t
                                  .def current_stateH = r19
                                  .def current_stateL = r20
                                  .def state = r21
-                                 .def change_timer_timer = r22
+                                 .def change_state_timer = r22
                                  
                                  
                                  ; _______________________________________
@@ -1191,7 +1191,7 @@ AVRASM ver. 2.2.8  C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-t
                                  	;|           Start Definition            |
                                  	;|_______________________________________|
                                  
-00008c e050                      	ldi state, 0
+00008c e051                      	ldi state, 1
 00008d d045                      	rcall clear_CUD
 00008e d041                      	rcall clear_CTD
                                  
@@ -1208,13 +1208,13 @@ AVRASM ver. 2.2.8  C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-t
                                  	;\~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~/
                                  
                                  	main:
-                                 		; Send traffic lights states by PORTD & PORTB
+                                 		; Send traffic lights signals by PORTD & PORTB
 000090 b935                      		out PORTB, current_stateH
 000091 b94b                      		out PORTD, current_stateL
                                  		
+                                 		; Send timer display signals by PORTC
 000092 b908                      		out PORTC, led0
 000093 d042                      		rcall delay
-                                 
 000094 b918                      		out PORTC, led1
 000095 d040                      		rcall delay
                                  
@@ -1228,14 +1228,16 @@ AVRASM ver. 2.2.8  C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-t
                                  ;|   Timer1 Interrupt Service Routine    |
                                  ;|_______________________________________|
                                  TIMER_ISR:
-000098 5061                      	subi change_timer_timer, 1
+000098 5061                      	subi change_state_timer, 1
                                  
-                                 	; Compare
+                                 	;	Compare if is time to change state
 000099 e020                      	ldi temp, 0
-00009a 1362                      	cpse change_timer_timer, temp
+00009a 1362                      	cpse change_state_timer, temp
 00009b 940c 00c7                 	jmp CONTINUE
 00009d 9553                      	inc state
                                  
+                                 	; if is time to change state, which state should we go now?
+                                 	; here we find out by the ´state´ variable
                                  	TEST0:
 00009e e020                      	ldi temp, 0
 00009f 1352                      	cpse state, temp
@@ -1277,8 +1279,9 @@ AVRASM ver. 2.2.8  C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-t
 0000c3 940c 00c7                 	jmp CONTINUE
 0000c5 e050                      	ldi state, 0
 0000c6 d017                      	rcall STATE0
-                                 	CONTINUE:
                                  
+                                 	CONTINUE:
+                                 	;	Count down by 1 on the display
 0000c7 951a                      	dec led1
                                  	;	Compare Clock Unit Value to 31
 0000c8 311f                      	cpi led1, 0b00011111
@@ -1340,7 +1343,7 @@ AVRASM ver. 2.2.8  C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-t
                                  
                                  
                                  STATE0:
-0000de e06f                      	ldi change_timer_timer, 15
+0000de e06f                      	ldi change_state_timer, 15
                                  
 0000df e0f0                      	ldi ZH, high(Table_States+0<<1)  
 0000e0 e3e0                          ldi ZL, low(Table_States+0<<1)
@@ -1350,7 +1353,7 @@ AVRASM ver. 2.2.8  C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-t
 0000e3 9508                      	ret
                                  
                                  STATE1:
-0000e4 e169                      	ldi change_timer_timer, 25
+0000e4 e169                      	ldi change_state_timer, 25
                                  
 0000e5 e0f0                      	ldi ZH, high(Table_States+1<<1)  
 0000e6 e3e2                          ldi ZL, low(Table_States+1<<1)
@@ -1372,7 +1375,7 @@ AVRASM ver. 2.2.8  C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-t
 0000ed 9508                      	ret
                                  
                                  STATE2:
-0000ee e065                      	ldi change_timer_timer, 5
+0000ee e065                      	ldi change_state_timer, 5
                                  
 0000ef e0f0                      	ldi ZH, high(Table_States+2<<1)  
 0000f0 e3e4                          ldi ZL, low(Table_States+2<<1)
@@ -1382,7 +1385,7 @@ AVRASM ver. 2.2.8  C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-t
 0000f3 9508                      	ret
                                  
                                  STATE3:
-0000f4 e36c                      	ldi change_timer_timer, 60
+0000f4 e36c                      	ldi change_state_timer, 60
                                  
 0000f5 e0f0                      	ldi ZH, high(Table_States+3<<1)  
 0000f6 e3e6                          ldi ZL, low(Table_States+3<<1)
@@ -1392,7 +1395,7 @@ AVRASM ver. 2.2.8  C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-t
 0000f9 9508                      	ret
                                  
                                  STATE4:
-0000fa e065                      	ldi change_timer_timer, 5
+0000fa e065                      	ldi change_state_timer, 5
                                  
 0000fb e0f0                      	ldi ZH, high(Table_States+4<<1)  
 0000fc e3e8                          ldi ZL, low(Table_States+4<<1)
@@ -1413,7 +1416,7 @@ AVRASM ver. 2.2.8  C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-t
 000103 9508                      	ret
                                  
                                  STATE5:
-000104 e169                      	ldi change_timer_timer, 25
+000104 e169                      	ldi change_state_timer, 25
                                  
 000105 e0f0                      	ldi ZH, high(Table_States+5<<1)  
 000106 e3ea                          ldi ZL, low(Table_States+5<<1)
@@ -1434,7 +1437,7 @@ AVRASM ver. 2.2.8  C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-t
 00010d 9508                      	ret
                                  
                                  STATE6:
-00010e e065                      	ldi change_timer_timer, 5
+00010e e065                      	ldi change_state_timer, 5
                                  
 00010f e0f0                      	ldi ZH, high(Table_States+6<<1)  
 000110 e3ec                          ldi ZL, low(Table_States+6<<1)

@@ -124,7 +124,7 @@ RESET:
 	;|           Start Definition            |
 	;|_______________________________________|
 
-	ldi state, 0
+	ldi state, 1
 	rcall clear_CUD
 	rcall clear_CTD
 
@@ -163,12 +163,14 @@ RESET:
 TIMER_ISR:
 	subi change_state_timer, 1
 
-	; Compare if is time to change state
+	;	Compare if is time to change state
 	ldi temp, 0
 	cpse change_state_timer, temp
 	jmp CONTINUE
 	inc state
 
+	; if is time to change state, which state should we go now?
+	; here we find out by the ´state´ variable
 	TEST0:
 	ldi temp, 0
 	cpse state, temp
@@ -210,8 +212,9 @@ TIMER_ISR:
 	jmp CONTINUE
 	ldi state, 0
 	rcall STATE0
-	CONTINUE:
 
+	CONTINUE:
+	;	Count down by 1 on the display
 	dec led1
 	;	Compare Clock Unit Value to 31
 	cpi led1, 0b00011111

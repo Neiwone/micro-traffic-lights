@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm Wed Sep 24 08:10:46 2025
+AVRASM ver. 2.2.8  C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm Wed Sep 24 10:53:32 2025
 
 
 EQU  SIGNATURE_000 0000001e
@@ -701,7 +701,7 @@ DEF  temp         r18
 DEF  current_stateH r19
 DEF  current_stateL r20
 DEF  state        r21
-DEF  change_timer_timer r22
+DEF  change_state_timer r22
 CSEG RESET        0000006c
 CSEG TIMER_ISR    00000098
 CSEG Table_States 00000018
