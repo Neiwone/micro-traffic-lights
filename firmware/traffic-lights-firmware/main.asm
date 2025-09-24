@@ -6,7 +6,7 @@
 .def current_stateH = r19
 .def current_stateL = r20
 .def state = r21
-.def change_timer_timer = r22
+.def change_state_timer = r22
 
 
 ; _______________________________________
@@ -128,7 +128,7 @@ RESET:
 	rcall clear_CUD
 	rcall clear_CTD
 
-	rcall STATE0
+	rcall STATE1
 
 	;________________________________________
 
@@ -141,13 +141,13 @@ RESET:
 	;\~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~/
 
 	main:
-		; Send traffic lights states by PORTD & PORTB
+		; Send traffic lights signals by PORTD & PORTB
 		out PORTB, current_stateH
 		out PORTD, current_stateL
 		
+		; Send timer display signals by PORTC
 		out PORTC, led0
 		rcall delay
-
 		out PORTC, led1
 		rcall delay
 
@@ -161,11 +161,11 @@ RESET:
 ;|   Timer1 Interrupt Service Routine    |
 ;|_______________________________________|
 TIMER_ISR:
-	subi change_timer_timer, 1
+	subi change_state_timer, 1
 
-	; Compare
+	; Compare if is time to change state
 	ldi temp, 0
-	cpse change_timer_timer, temp
+	cpse change_state_timer, temp
 	jmp CONTINUE
 	inc state
 
@@ -212,16 +212,16 @@ TIMER_ISR:
 	rcall STATE0
 	CONTINUE:
 
-	inc led1
-	;	Compare Clock Unit Value to 9
-	cpi led1, 0b00101010
+	dec led1
+	;	Compare Clock Unit Value to 31
+	cpi led1, 0b00011111
 	brne exit_T1ISR
 
 	;	Reset Clock Unit Value
 	rcall clear_CUD
-	inc led0
-	;	Compare Clock Ten Value to 9
-	cpi led0, 0b00011010
+	dec led0
+	;	Compare Clock Ten Value to 15
+	cpi led0, 0b00001111
 	brne exit_T1ISR
 
 	;	Reset Clock Ten Value
@@ -236,16 +236,16 @@ TIMER_ISR:
 	
 ; > TENS DISPLAY
 clear_CTD:
-;	Start with 0
-ldi led0, 0b00000000
+;	Start with 9
+ldi led0, 0b00001001
 ;	Set transistor value of Clock Tens Display to 1 
 ori led0, 1 << 4
 ret
 
 ; > UNITS DISPLAY
 clear_CUD:
-;	Start with 0
-ldi led1, 0b00000000
+;	Start with 9
+ldi led1, 0b00001001
 ;	Set transistor value of Clock Units Display to 1 
 ori led1, 1 << 5
 ret
@@ -254,11 +254,11 @@ ret
 ; _______________________________________
 ;|		 	  Delay function			 |
 ;|---------------------------------------|
-;|  Keep the CPU busy for 2ms.           |
+;|  Keep the CPU busy for 1ms.           |
 ;|_______________________________________|
 delay:
 	.equ ClockMHz = 16 ; 16MHz
-	.equ DelayMs = 2 ; 2ms
+	.equ DelayMs = 1 ; 2ms
 	ldi r29, byte3 (ClockMHz * 1000 * DelayMs / 5)
 	ldi r28, high (ClockMHz * 1000 * DelayMs / 5)
 	ldi r27, low(ClockMHz * 1000 * DelayMs / 5)
@@ -273,85 +273,105 @@ delay:
 
 
 STATE0:
-	ldi change_timer_timer, 14
+	ldi change_state_timer, 15
 
 	ldi ZH, high(Table_States+0<<1)  
     ldi ZL, low(Table_States+0<<1)
     lpm current_stateH, Z+
 	lpm current_stateL, Z
 
-	rcall clear_CUD
-	rcall clear_CTD
 	ret
 
 STATE1:
-	ldi change_timer_timer, 25
+	ldi change_state_timer, 25
 
 	ldi ZH, high(Table_States+1<<1)  
     ldi ZL, low(Table_States+1<<1)
     lpm current_stateH, Z+
 	lpm current_stateL, Z
 
-	rcall clear_CUD
-	rcall clear_CTD
+	;	Count down 90 sec
+
+	;	Load 9 on led0
+	ldi led0, 0b00001001
+	;	Set transistor value of Clock Tens Display to 1 
+	ori led0, 1 << 4
+
+	;	Load 0 on led1
+	ldi led1, 0b00000000
+	;	Set transistor value of Clock Units Display to 1 
+	ori led1, 1 << 5
+
 	ret
 
 STATE2:
-	ldi change_timer_timer, 4
+	ldi change_state_timer, 5
 
 	ldi ZH, high(Table_States+2<<1)  
     ldi ZL, low(Table_States+2<<1)
     lpm current_stateH, Z+
 	lpm current_stateL, Z
 
-	rcall clear_CUD
-	rcall clear_CTD
 	ret
 
 STATE3:
-	ldi change_timer_timer, 60
+	ldi change_state_timer, 60
 
 	ldi ZH, high(Table_States+3<<1)  
     ldi ZL, low(Table_States+3<<1)
     lpm current_stateH, Z+
 	lpm current_stateL, Z
 
-	rcall clear_CUD
-	rcall clear_CTD
 	ret
 
 STATE4:
-	ldi change_timer_timer, 4
+	ldi change_state_timer, 5
 
 	ldi ZH, high(Table_States+4<<1)  
     ldi ZL, low(Table_States+4<<1)
     lpm current_stateH, Z+
 	lpm current_stateL, Z
 
-	rcall clear_CUD
-	rcall clear_CTD
+	;	Count down 05 sec
+
+	;	Load 0 on led0
+	ldi led0, 0b00000000
+	;	Set transistor value of Clock Tens Display to 1 
+	ori led0, 1 << 4
+
+	;	Load 5 on led1
+	ldi led1, 0b00000101
+	;	Set transistor value of Clock Units Display to 1 
+	ori led1, 1 << 5
 	ret
 
 STATE5:
-	ldi change_timer_timer, 25
+	ldi change_state_timer, 25
 
 	ldi ZH, high(Table_States+5<<1)  
     ldi ZL, low(Table_States+5<<1)
     lpm current_stateH, Z+
 	lpm current_stateL, Z
 
-	rcall clear_CUD
-	rcall clear_CTD
+	;	Count down 45 sec
+
+	;	Load 4 on led0
+	ldi led0, 0b00000100
+	;	Set transistor value of Clock Tens Display to 1 
+	ori led0, 1 << 4
+
+	;	Load 5 on led1
+	ldi led1, 0b00000101
+	;	Set transistor value of Clock Units Display to 1 
+	ori led1, 1 << 5
 	ret
 
 STATE6:
-	ldi change_timer_timer, 4
+	ldi change_state_timer, 5
 
 	ldi ZH, high(Table_States+6<<1)  
     ldi ZL, low(Table_States+6<<1)
     lpm current_stateH, Z+
 	lpm current_stateL, Z
 
-	rcall clear_CUD
-	rcall clear_CTD
 	ret

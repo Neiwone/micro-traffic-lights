@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  C:\Users\JoséFélixNeto\OneDrive - edge.ufal.br\Documentos\UFAL\Microcontroladores\Projeto\micro-traffic-lights\firmware\traffic-lights-firmware\main.asm Mon Sep 22 13:54:49 2025
+AVRASM ver. 2.2.8  C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm Wed Sep 24 08:10:46 2025
 
 
 EQU  SIGNATURE_000 0000001e
@@ -713,24 +713,24 @@ EQU  WGM          00000004
 EQU  TOP          00003d09
 CSEG clear_CUD    000000d3
 CSEG clear_CTD    000000d0
-CSEG STATE0       000000de
+CSEG STATE1       000000e4
 CSEG main         00000090
 CSEG delay        000000d6
 CSEG CONTINUE     000000c7
 CSEG TEST0        0000009e
 CSEG TEST1        000000a3
+CSEG STATE0       000000de
 CSEG TEST2        000000a8
-CSEG STATE1       000000e6
 CSEG TEST3        000000ad
 CSEG STATE2       000000ee
 CSEG TEST4        000000b2
-CSEG STATE3       000000f6
+CSEG STATE3       000000f4
 CSEG TEST5        000000b7
-CSEG STATE4       000000fe
+CSEG STATE4       000000fa
 CSEG TEST6        000000bc
-CSEG STATE5       00000106
+CSEG STATE5       00000104
 CSEG TEST7        000000c1
 CSEG STATE6       0000010e
 CSEG exit_T1ISR   000000cf
 EQU  ClockMHz     00000010
-EQU  DelayMs      00000002
+EQU  DelayMs      00000001
