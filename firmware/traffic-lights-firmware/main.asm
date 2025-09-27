@@ -46,27 +46,40 @@ Table_States:
 ;|    state5: “S0:R, S1:R, S2:R, S3:G”   |
 ;|    state6: “S0:R, S1:R, S2:R, S3:Y”   |
 ;|_______________________________________|
+Message_States:
 
-states_strings:
-	.db "S0:R, S1:R, S2:R, S3:R", "S0:G, S1:Y, S2:R, S3:R", "S0:G, S1:R, S2:R, S3:R", "S0:G, S1:R, S2:G, S3:R", "S0:Y, S1:R, S2:Y, S3:R", "S0:R, S1:R, S2:R, S3:G", "S0:R, S1:R, S2:R, S3:Y"
+state0_msg: .db "Semaforo 0: Vermelho, Semaforo 1: Vermelho, Semaforo 2: Vermelho, Semaforo 3: Vermelho", 10, "#"   ;	RRRR
+state1_msg: .db "Semaforo 0: Verde, Semaforo 1: Verde, Semaforo 2: Vermelho, Semaforo 3: Vermelho", 10, "#"   ;			GGRR
+state2_msg: .db "Semaforo 0: Verde, Semaforo 1: Amarelo, Semaforo 2: Vermelho, Semaforo 3: Vermelho", 10, "#"   ;		GYRR
+state3_msg: .db "Semaforo 0: Verde, Semaforo 1: Vermelho, Semaforo 2: Verde, Semaforo 3: Vermelho", 10, "#"   ;			GRGR
+state4_msg: .db "Semaforo 0: Amarelo, Semaforo 1: Vermelho, Semaforo 2: Amarelo, Semaforo 3: Vermelho", 10, "#"   ;		YRYR
+state5_msg: .db "Semaforo 0: Vermelho, Semaforo 1: Vermelho, Semaforo 2: Vermelho, Semaforo 3: Verde", 10, "#"   ;		RRRG
+state6_msg: .db "Semaforo 0: Vermelho, Semaforo 1: Vermelho, Semaforo 2: Vermelho, Semaforo 3: Amarelo", 10, "#"   ;	RRRY
+
 
 RESET:
+	;Stack initialization
+	ldi temp, low(RAMEND)
+	out SPL, temp
+	ldi temp, high(RAMEND)
+	out SPH, temp
 	; _______________________________________
 	;|            Setup of USART0			 |
 	;|_______________________________________|
 
 	.equ UBRRvalue = 103 ;16 mhz clock speed, 9600 baud UBRR = 103
 
-	ldi temp, high (UBRRvalue)  
+	ldi temp, high(UBRRvalue)  
 	sts UBRR0H, temp
-	ldi temp, low (UBRRvalue)
+	ldi temp, low(UBRRvalue)
 	sts UBRR0L, temp
 
 	; 8 bits, 1 stop, no parity, asynchronous mode
 	ldi temp, (3<<UCSZ00)
 	sts UCSR0C, temp
 
-	ldi temp, (0 << RXEN0) | (1 << TXEN0) ; TX Enable
+	ldi temp, (1 << TXEN0) ; TX Enable
+	sts UCSR0B, temp 
 
 	; _______________________________________
 	;|         Timer/Counter 1 Setup         |
@@ -140,6 +153,7 @@ RESET:
 	;\~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~/
 
 	main:
+		clc
 		;	Compare if is time to change state
 		tst change_state_timer
 		brne CONTINUE
@@ -200,7 +214,7 @@ RESET:
 		out PORTC, led1
 		rcall delay
 
-		jmp main
+		rjmp main
 
 	;_________________________________________
 
@@ -291,6 +305,10 @@ STATE0:
     lpm current_stateH, Z+
 	lpm current_stateL, Z
 
+	ldi ZH, high(state0_msg<<1)
+    ldi ZL, low(state0_msg<<1)
+    rcall send_string
+
 	ret
 
 ; ________________________________________
@@ -324,6 +342,10 @@ STATE1:
 	;	Set transistor value of Clock Units Display to 1 
 	ori led1, 1 << 5
 
+	ldi ZH, high(state1_msg<<1)
+    ldi ZL, low(state1_msg<<1)
+    rcall send_string
+
 	ret
 
 ; ________________________________________
@@ -345,6 +367,10 @@ STATE2:
     lpm current_stateH, Z+
 	lpm current_stateL, Z
 
+	ldi ZH, high(state2_msg<<1)
+    ldi ZL, low(state2_msg<<1)
+    rcall send_string
+
 	ret
 
 ; ________________________________________
@@ -364,6 +390,10 @@ STATE3:
     ldi ZL, low(Table_States+3<<1)
     lpm current_stateH, Z+
 	lpm current_stateL, Z
+
+	ldi ZH, high(state3_msg<<1)
+    ldi ZL, low(state3_msg<<1)
+    rcall send_string
 
 	ret
 
@@ -397,6 +427,11 @@ STATE4:
 	ldi led1, 0b00000101
 	;	Set transistor value of Clock Units Display to 1 
 	ori led1, 1 << 5
+
+	ldi ZH, high(state4_msg<<1)
+    ldi ZL, low(state4_msg<<1)
+    rcall send_string
+
 	ret
 
 ; ________________________________________
@@ -429,6 +464,11 @@ STATE5:
 	ldi led1, 0b00000101
 	;	Set transistor value of Clock Units Display to 1 
 	ori led1, 1 << 5
+
+	ldi ZH, high(state5_msg<<1)
+    ldi ZL, low(state5_msg<<1)
+    rcall send_string
+
 	ret
 
 ; ________________________________________
@@ -449,4 +489,28 @@ STATE6:
     lpm current_stateH, Z+
 	lpm current_stateL, Z
 
+	ldi ZH, high(state6_msg<<1)
+    ldi ZL, low(state6_msg<<1)
+    rcall send_string
+
 	ret
+
+; _______________________________________
+;| Send string via USART0 (Z ptr)        |
+;|---------------------------------------|
+;| Entrada: Z aponta para string em ROM  |
+;| String termina em caractere '#'       |
+;|_______________________________________|
+
+send_string:
+    lpm temp, Z+             ; lê caractere da flash
+    cpi temp, '#'            ; chegou no fim?
+    breq send_done
+wait_udre:
+    lds r27, UCSR0A
+    sbrs r27, UDRE0          ; espera buffer vazio
+    rjmp wait_udre
+    sts UDR0, temp           ; transmite caractere
+    rjmp send_string
+send_done:
+    ret
