@@ -35,26 +35,26 @@ jmp TIMER_ISR
 Table_States:
 .dw 0b1001000000100100, 0b0010010000100100, 0b0100010000100100, 0b1000010000100001, 0b1000100000100010, 0b1001000000001100, 0b1001000000010100
 
-; _______________________________________
-;|          Defining States String       |
-;|---------------------------------------|
-;|    state0: “S0:R, S1:R, S2:R, S3:R”   |
-;|    state1: “S0:G, S1:G, S2:R, S3:R”   |
-;|    state2: “S0:G, S1:Y, S2:R, S3:R”   |
-;|    state3: “S0:G, S1:R, S2:G, S3:R”   |
-;|    state4: “S0:Y, S1:R, S2:Y, S3:R”   |
-;|    state5: “S0:R, S1:R, S2:R, S3:G”   |
-;|    state6: “S0:R, S1:R, S2:R, S3:Y”   |
-;|_______________________________________|
-Message_States:
+; ___________________________________________________________________________________________________________
+;|          Defining States String																			 |
+;|-----------------------------------------------------------------------------------------------------------|
+;|    state0: "Semaforo 0: Vermelho, Semaforo 1: Vermelho, Semaforo 2: Vermelho, Semaforo 3: Vermelho ", "#" |
+;|    state1: "Semaforo 0: Verde, Semaforo 1: Verde, Semaforo 2: Vermelho, Semaforo 3: Vermelho ", "#"       |
+;|    state2: "Semaforo 0: Verde, Semaforo 1: Amarelo, Semaforo 2: Vermelho, Semaforo 3: Vermelho ", "#"     |
+;|    state3: "Semaforo 0: Verde, Semaforo 1: Vermelho, Semaforo 2: Verde, Semaforo 3: Vermelho ", "#"       |
+;|    state4: "Semaforo 0: Amarelo, Semaforo 1: Vermelho, Semaforo 2: Amarelo, Semaforo 3: Vermelho ", "#"   |
+;|    state5: "Semaforo 0: Vermelho, Semaforo 1: Vermelho, Semaforo 2: Vermelho, Semaforo 3: Verde ", "#"    |
+;|    state6: "Semaforo 0: Vermelho, Semaforo 1: Vermelho, Semaforo 2: Vermelho, Semaforo 3: Amarelo ", "#"  |
+;|___________________________________________________________________________________________________________|
 
-state0_msg: .db "Semaforo 0: Vermelho, Semaforo 1: Vermelho, Semaforo 2: Vermelho, Semaforo 3: Vermelho", 10, "#"   ;	RRRR
-state1_msg: .db "Semaforo 0: Verde, Semaforo 1: Verde, Semaforo 2: Vermelho, Semaforo 3: Vermelho", 10, "#"   ;			GGRR
-state2_msg: .db "Semaforo 0: Verde, Semaforo 1: Amarelo, Semaforo 2: Vermelho, Semaforo 3: Vermelho", 10, "#"   ;		GYRR
-state3_msg: .db "Semaforo 0: Verde, Semaforo 1: Vermelho, Semaforo 2: Verde, Semaforo 3: Vermelho", 10, "#"   ;			GRGR
-state4_msg: .db "Semaforo 0: Amarelo, Semaforo 1: Vermelho, Semaforo 2: Amarelo, Semaforo 3: Vermelho", 10, "#"   ;		YRYR
-state5_msg: .db "Semaforo 0: Vermelho, Semaforo 1: Vermelho, Semaforo 2: Vermelho, Semaforo 3: Verde", 10, "#"   ;		RRRG
-state6_msg: .db "Semaforo 0: Vermelho, Semaforo 1: Vermelho, Semaforo 2: Vermelho, Semaforo 3: Amarelo", 10, "#"   ;	RRRY
+Message_States:
+state0_msg: .db "Semaforo 0: Vermelho, Semaforo 1: Vermelho, Semaforo 2: Vermelho, Semaforo 3: Vermelho", "#"   ;	RRRR
+state1_msg: .db "Semaforo 0: Verde, Semaforo 1: Verde, Semaforo 2: Vermelho, Semaforo 3: Vermelho", "#"		    ;	GGRR
+state2_msg: .db "Semaforo 0: Verde, Semaforo 1: Amarelo, Semaforo 2: Vermelho, Semaforo 3: Vermelho", "#"       ;	GYRR
+state3_msg: .db "Semaforo 0: Verde, Semaforo 1: Vermelho, Semaforo 2: Verde, Semaforo 3: Vermelho", "#"         ;	GRGR
+state4_msg: .db "Semaforo 0: Amarelo, Semaforo 1: Vermelho, Semaforo 2: Amarelo, Semaforo 3: Vermelho", "#"     ;   YRYR
+state5_msg: .db "Semaforo 0: Vermelho, Semaforo 1: Vermelho, Semaforo 2: Vermelho, Semaforo 3: Verde", "#"      ;	RRRG
+state6_msg: .db "Semaforo 0: Vermelho, Semaforo 1: Vermelho, Semaforo 2: Vermelho, Semaforo 3: Amarelo", "#"    ;	RRRY
 
 
 RESET:
@@ -472,7 +472,7 @@ STATE5:
 	ret
 
 ; ________________________________________
-;|		 		 State 5				  |
+;|		 		 State 6				  |
 ;|----------------------------------------|
 ;|  Traffic lights:                       |
 ;|   > 1, 2 and 3 are red                 |

@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm Fri Sep 26 22:20:07 2025
+AVRASM ver. 2.2.8  C:\Users\jotaf\OneDrive\Documentos\UFAL\Microcontroladores\Projeto\micro-traffic-lights\firmware\traffic-lights-firmware\main.asm Mon Sep 29 01:11:59 2025
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328Pdef.inc'
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328Pdef.inc'
@@ -1000,9 +1000,9 @@ AVRASM ver. 2.2.8  C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-t
                                  ;|_______________________________________|
                                  
                                  .org 0x0000
-000000 940c 0149                 jmp RESET
+000000 940c 0147                 jmp RESET
                                  .org OC1Aaddr
-000016 940c 01a7                 jmp TIMER_ISR
+000016 940c 01a5                 jmp TIMER_ISR
                                  
                                  
                                  
@@ -1027,19 +1027,19 @@ AVRASM ver. 2.2.8  C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-t
 00001d 900c
 00001e 9014                      .dw 0b1001000000100100, 0b0010010000100100, 0b0100010000100100, 0b1000010000100001, 0b1000100000100010, 0b1001000000001100, 0b1001000000010100
                                  
-                                 ; _______________________________________
-                                 ;|          Defining States String       |
-                                 ;|---------------------------------------|
-                                 ;|    state0: “S0:R, S1:R, S2:R, S3:R”   |
-                                 ;|    state1: “S0:G, S1:G, S2:R, S3:R”   |
-                                 ;|    state2: “S0:G, S1:Y, S2:R, S3:R”   |
-                                 ;|    state3: “S0:G, S1:R, S2:G, S3:R”   |
-                                 ;|    state4: “S0:Y, S1:R, S2:Y, S3:R”   |
-                                 ;|    state5: “S0:R, S1:R, S2:R, S3:G”   |
-                                 ;|    state6: “S0:R, S1:R, S2:R, S3:Y”   |
-                                 ;|_______________________________________|
-                                 Message_States:
+                                 ; ___________________________________________________________________________________________________________
+                                 ;|          Defining States String																			 |
+                                 ;|-----------------------------------------------------------------------------------------------------------|
+                                 ;|    state0: "Semaforo 0: Vermelho, Semaforo 1: Vermelho, Semaforo 2: Vermelho, Semaforo 3: Vermelho ", "#" |
+                                 ;|    state1: "Semaforo 0: Verde, Semaforo 1: Verde, Semaforo 2: Vermelho, Semaforo 3: Vermelho ", "#"       |
+                                 ;|    state2: "Semaforo 0: Verde, Semaforo 1: Amarelo, Semaforo 2: Vermelho, Semaforo 3: Vermelho ", "#"     |
+                                 ;|    state3: "Semaforo 0: Verde, Semaforo 1: Vermelho, Semaforo 2: Verde, Semaforo 3: Vermelho ", "#"       |
+                                 ;|    state4: "Semaforo 0: Amarelo, Semaforo 1: Vermelho, Semaforo 2: Amarelo, Semaforo 3: Vermelho ", "#"   |
+                                 ;|    state5: "Semaforo 0: Vermelho, Semaforo 1: Vermelho, Semaforo 2: Vermelho, Semaforo 3: Verde ", "#"    |
+                                 ;|    state6: "Semaforo 0: Vermelho, Semaforo 1: Vermelho, Semaforo 2: Vermelho, Semaforo 3: Amarelo ", "#"  |
+                                 ;|___________________________________________________________________________________________________________|
                                  
+                                 Message_States:
 00001f 6553
 000020 616d
 000021 6f66
@@ -1124,7 +1124,8 @@ AVRASM ver. 2.2.8  C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-t
 000070 6d72
 000071 6c65
 000072 6f68
-000073 230a                      state1_msg: .db "Semaforo 0: Verde, Semaforo 1: Verde, Semaforo 2: Vermelho, Semaforo 3: Vermelho", 10, "#"   ;			GGRR
+C:\Users\jotaf\OneDrive\Documentos\UFAL\Microcontroladores\Projeto\micro-traffic-lights\firmware\traffic-lights-firmware\main.asm(52): warning: .cseg .db misalignment - padding zero byte
+000073 0023                      state1_msg: .db "Semaforo 0: Verde, Semaforo 1: Verde, Semaforo 2: Vermelho, Semaforo 3: Vermelho", "#"		    ;	GGRR
 000074 6553
 000075 616d
 000076 6f66
@@ -1166,7 +1167,8 @@ AVRASM ver. 2.2.8  C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-t
 00009a 6d72
 00009b 6c65
 00009c 6f68
-00009d 230a                      state2_msg: .db "Semaforo 0: Verde, Semaforo 1: Amarelo, Semaforo 2: Vermelho, Semaforo 3: Vermelho", 10, "#"   ;		GYRR
+C:\Users\jotaf\OneDrive\Documentos\UFAL\Microcontroladores\Projeto\micro-traffic-lights\firmware\traffic-lights-firmware\main.asm(53): warning: .cseg .db misalignment - padding zero byte
+00009d 0023                      state2_msg: .db "Semaforo 0: Verde, Semaforo 1: Amarelo, Semaforo 2: Vermelho, Semaforo 3: Vermelho", "#"       ;	GYRR
 00009e 6553
 00009f 616d
 0000a0 6f66
@@ -1207,7 +1209,8 @@ AVRASM ver. 2.2.8  C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-t
 0000c3 6d72
 0000c4 6c65
 0000c5 6f68
-0000c6 230a                      state3_msg: .db "Semaforo 0: Verde, Semaforo 1: Vermelho, Semaforo 2: Verde, Semaforo 3: Vermelho", 10, "#"   ;			GRGR
+C:\Users\jotaf\OneDrive\Documentos\UFAL\Microcontroladores\Projeto\micro-traffic-lights\firmware\traffic-lights-firmware\main.asm(54): warning: .cseg .db misalignment - padding zero byte
+0000c6 0023                      state3_msg: .db "Semaforo 0: Verde, Semaforo 1: Vermelho, Semaforo 2: Verde, Semaforo 3: Vermelho", "#"         ;	GRGR
 0000c7 6553
 0000c8 616d
 0000c9 6f66
@@ -1250,7 +1253,8 @@ AVRASM ver. 2.2.8  C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-t
 0000ee 6d72
 0000ef 6c65
 0000f0 6f68
-0000f1 230a                      state4_msg: .db "Semaforo 0: Amarelo, Semaforo 1: Vermelho, Semaforo 2: Amarelo, Semaforo 3: Vermelho", 10, "#"   ;		YRYR
+C:\Users\jotaf\OneDrive\Documentos\UFAL\Microcontroladores\Projeto\micro-traffic-lights\firmware\traffic-lights-firmware\main.asm(55): warning: .cseg .db misalignment - padding zero byte
+0000f1 0023                      state4_msg: .db "Semaforo 0: Amarelo, Semaforo 1: Vermelho, Semaforo 2: Amarelo, Semaforo 3: Vermelho", "#"     ;   YRYR
 0000f2 6553
 0000f3 616d
 0000f4 6f66
@@ -1292,79 +1296,75 @@ AVRASM ver. 2.2.8  C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-t
 000118 203a
 000119 6556
 00011a 6472
-00011b 0a65
-C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm(56): warning: .cseg .db misalignment - padding zero byte
-00011c 0023                      state5_msg: .db "Semaforo 0: Vermelho, Semaforo 1: Vermelho, Semaforo 2: Vermelho, Semaforo 3: Verde", 10, "#"   ;		RRRG
-00011d 6553
-00011e 616d
-00011f 6f66
-000120 6f72
-000121 3020
-000122 203a
-000123 6556
-000124 6d72
-000125 6c65
-000126 6f68
-000127 202c
-000128 6553
-000129 616d
-00012a 6f66
-00012b 6f72
-00012c 3120
-00012d 203a
-00012e 6556
-00012f 6d72
-000130 6c65
-000131 6f68
-000132 202c
-000133 6553
-000134 616d
-000135 6f66
-000136 6f72
-000137 3220
-000138 203a
-000139 6556
-00013a 6d72
-00013b 6c65
-00013c 6f68
-00013d 202c
-00013e 6553
-00013f 616d
-000140 6f66
-000141 6f72
-000142 3320
-000143 203a
-000144 6d41
-000145 7261
-000146 6c65
-000147 0a6f
-C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm(57): warning: .cseg .db misalignment - padding zero byte
-000148 0023                      state6_msg: .db "Semaforo 0: Vermelho, Semaforo 1: Vermelho, Semaforo 2: Vermelho, Semaforo 3: Amarelo", 10, "#"   ;	RRRY
+00011b 2365                      state5_msg: .db "Semaforo 0: Vermelho, Semaforo 1: Vermelho, Semaforo 2: Vermelho, Semaforo 3: Verde", "#"      ;	RRRG
+00011c 6553
+00011d 616d
+00011e 6f66
+00011f 6f72
+000120 3020
+000121 203a
+000122 6556
+000123 6d72
+000124 6c65
+000125 6f68
+000126 202c
+000127 6553
+000128 616d
+000129 6f66
+00012a 6f72
+00012b 3120
+00012c 203a
+00012d 6556
+00012e 6d72
+00012f 6c65
+000130 6f68
+000131 202c
+000132 6553
+000133 616d
+000134 6f66
+000135 6f72
+000136 3220
+000137 203a
+000138 6556
+000139 6d72
+00013a 6c65
+00013b 6f68
+00013c 202c
+00013d 6553
+00013e 616d
+00013f 6f66
+000140 6f72
+000141 3320
+000142 203a
+000143 6d41
+000144 7261
+000145 6c65
+000146 236f                      state6_msg: .db "Semaforo 0: Vermelho, Semaforo 1: Vermelho, Semaforo 2: Vermelho, Semaforo 3: Amarelo", "#"    ;	RRRY
                                  
                                  
                                  RESET:
-                                 	;Stack initialization
-000149 ef2f                      	ldi temp, low(RAMEND)
-00014a bf2d                      	out SPL, temp
-00014b e028                      	ldi temp, high(RAMEND)
-00014c bf2e                      	out SPH, temp
+                                 	; Stack initialization
+000147 ef2f                      	ldi temp, low(RAMEND)
+000148 bf2d                      	out SPL, temp
+000149 e028                      	ldi temp, high(RAMEND)
+00014a bf2e                      	out SPH, temp
                                  	; _______________________________________
                                  	;|            Setup of USART0			 |
                                  	;|_______________________________________|
                                  
                                  	.equ UBRRvalue = 103 ;16 mhz clock speed, 9600 baud UBRR = 103
                                  
-00014d e020                      	ldi temp, high(UBRRvalue)  
-00014e 9320 00c5                 	sts UBRR0H, temp
-000150 e627                      	ldi temp, low(UBRRvalue)
-000151 9320 00c4                 	sts UBRR0L, temp
+00014b e020                      	ldi temp, high(UBRRvalue)  
+00014c 9320 00c5                 	sts UBRR0H, temp
+00014e e627                      	ldi temp, low(UBRRvalue)
+00014f 9320 00c4                 	sts UBRR0L, temp
                                  
                                  	; 8 bits, 1 stop, no parity, asynchronous mode
-000153 e026                      	ldi temp, (3<<UCSZ00)
-000154 9320 00c2                 	sts UCSR0C, temp
+000151 e026                      	ldi temp, (3<<UCSZ00)
+000152 9320 00c2                 	sts UCSR0C, temp
                                  
-000156 e028                      	ldi temp, (1 << TXEN0) ; TX Enable
-000157 9320 00c1                 	sts UCSR0B, temp 
+000154 e028                      	ldi temp, (1 << TXEN0) ; TX Enable
+000155 9320 00c1                 	sts UCSR0B, temp 
                                  
                                  	; _______________________________________
                                  	;|         Timer/Counter 1 Setup         |
@@ -1373,7 +1373,7 @@ C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmwa
                                  	;	Set TOP value
                                  
                                  	#define CLOCK 16.0e6 ;clock speed
-                                 	#define DELAY 0.25 ;seconds
+                                 	#define DELAY 1 ;seconds
                                  	.equ PRESCALE = 0b101
                                  	.equ PRESCALE_DIV = 1024
                                  	.equ WGM = 0b0100
@@ -1383,48 +1383,48 @@ C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmwa
                                  
                                  	;	Load TOP in output compare registers for Timer/Counter 1
                                  
-000159 e02f                      	ldi temp, high(TOP)
-00015a 9320 0089                 	sts OCR1AH, temp
-00015c e422                      	ldi temp, low(TOP)
-00015d 9320 0088                 	sts OCR1AL, temp
+000157 e32d                      	ldi temp, high(TOP)
+000158 9320 0089                 	sts OCR1AH, temp
+00015a e029                      	ldi temp, low(TOP)
+00015b 9320 0088                 	sts OCR1AL, temp
                                  
                                  	;	Configure CTC mode and PRESCALE
                                  
-00015f e020                      	ldi temp, ((WGM&0b11) << WGM10)
-000160 9320 0080                 	sts TCCR1A, temp
-000162 e02d                      	ldi temp, ((WGM>> 2) << WGM12) | (PRESCALE << CS10)
-000163 9320 0081                 	sts TCCR1B, temp ;start counter
+00015d e020                      	ldi temp, ((WGM&0b11) << WGM10)
+00015e 9320 0080                 	sts TCCR1A, temp
+000160 e02d                      	ldi temp, ((WGM>> 2) << WGM12) | (PRESCALE << CS10)
+000161 9320 0081                 	sts TCCR1B, temp ;start counter
                                  	;________________________________________
                                  
                                  	; _______________________________________
                                  	;|       Interrupt Registers Setup       |
                                  	;|_______________________________________|
                                  
-000165 9110 006f                 	lds	r17, TIMSK1
-000167 6012                      	sbr r17, 1 << OCIE1A
-000168 9310 006f                 	sts TIMSK1, r17
-00016a 9478                      	sei
+000163 9110 006f                 	lds	r17, TIMSK1
+000165 6012                      	sbr r17, 1 << OCIE1A
+000166 9310 006f                 	sts TIMSK1, r17
+000168 9478                      	sei
                                  	;________________________________________
                                  
                                  	; _______________________________________
                                  	;|            I/O Ports Setup            |
                                  	;|_______________________________________|
                                  
-00016b ef2f                      	ldi temp, $FF
-00016c b924                      	out DDRB, temp
-00016d b927                      	out DDRC, temp
-00016e b92a                      	out DDRD, temp
+000169 ef2f                      	ldi temp, $FF
+00016a b924                      	out DDRB, temp
+00016b b927                      	out DDRC, temp
+00016c b92a                      	out DDRD, temp
                                  	;________________________________________
                                  
                                  	; _______________________________________
                                  	;|           Start Definition            |
                                  	;|_______________________________________|
                                  
-00016f e051                      	ldi state, 1
-000170 d043                      	rcall clear_CUD
-000171 d03f                      	rcall clear_CTD
+00016d e051                      	ldi state, 1
+00016e d043                      	rcall clear_CUD
+00016f d03f                      	rcall clear_CTD
                                  
-000172 d055                      	rcall STATE1
+000170 d055                      	rcall STATE1
                                  
                                  	;________________________________________
                                  
@@ -1437,68 +1437,68 @@ C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmwa
                                  	;\~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~/
                                  
                                  	main:
-000173 9488                      		clc
+000171 9488                      		clc
                                  		;	Compare if is time to change state
-000174 2366                      		tst change_state_timer
-000175 f551                      		brne CONTINUE
-000176 9553                      		inc state
+000172 2366                      		tst change_state_timer
+000173 f551                      		brne CONTINUE
+000174 9553                      		inc state
                                  
                                  		; if is time to change state, which state should we go now?
                                  		; here we find out by the ´state´ variable
                                  		TEST0:
-000177 e020                      		ldi temp, 0
-000178 1352                      		cpse state, temp
-000179 940c 017c                 		jmp TEST1
-00017b d043                      		rcall STATE0
+000175 e020                      		ldi temp, 0
+000176 1352                      		cpse state, temp
+000177 940c 017a                 		jmp TEST1
+000179 d043                      		rcall STATE0
                                  		TEST1:
-00017c e021                      		ldi temp, 1
-00017d 1352                      		cpse state, temp
-00017e 940c 0181                 		jmp TEST2
-000180 d047                      		rcall STATE1
+00017a e021                      		ldi temp, 1
+00017b 1352                      		cpse state, temp
+00017c 940c 017f                 		jmp TEST2
+00017e d047                      		rcall STATE1
                                  		TEST2:
-000181 e022                      		ldi temp, 2
-000182 1352                      		cpse state, temp
-000183 940c 0186                 		jmp TEST3
-000185 d04f                      		rcall STATE2
+00017f e022                      		ldi temp, 2
+000180 1352                      		cpse state, temp
+000181 940c 0184                 		jmp TEST3
+000183 d04f                      		rcall STATE2
                                  		TEST3:
-000186 e023                      		ldi temp, 3
-000187 1352                      		cpse state, temp
-000188 940c 018b                 		jmp TEST4
-00018a d053                      		rcall STATE3
+000184 e023                      		ldi temp, 3
+000185 1352                      		cpse state, temp
+000186 940c 0189                 		jmp TEST4
+000188 d053                      		rcall STATE3
                                  		TEST4:
-00018b e024                      		ldi temp, 4
-00018c 1352                      		cpse state, temp
-00018d 940c 0190                 		jmp TEST5
-00018f d057                      		rcall STATE4
+000189 e024                      		ldi temp, 4
+00018a 1352                      		cpse state, temp
+00018b 940c 018e                 		jmp TEST5
+00018d d057                      		rcall STATE4
                                  		TEST5:
-000190 e025                      		ldi temp, 5
-000191 1352                      		cpse state, temp
-000192 940c 0195                 		jmp TEST6
-000194 d05f                      		rcall STATE5
+00018e e025                      		ldi temp, 5
+00018f 1352                      		cpse state, temp
+000190 940c 0193                 		jmp TEST6
+000192 d05f                      		rcall STATE5
                                  		TEST6:
-000195 e026                      		ldi temp, 6
-000196 1352                      		cpse state, temp
-000197 940c 019a                 		jmp TEST7
-000199 d067                      		rcall STATE6
+000193 e026                      		ldi temp, 6
+000194 1352                      		cpse state, temp
+000195 940c 0198                 		jmp TEST7
+000197 d067                      		rcall STATE6
                                  		TEST7:
-00019a e027                      		ldi temp, 7
-00019b 1352                      		cpse state, temp
-00019c 940c 01a0                 		jmp CONTINUE
-00019e e050                      		ldi state, 0
-00019f d01f                      		rcall STATE0
+000198 e027                      		ldi temp, 7
+000199 1352                      		cpse state, temp
+00019a 940c 019e                 		jmp CONTINUE
+00019c e050                      		ldi state, 0
+00019d d01f                      		rcall STATE0
                                  
                                  		CONTINUE:
                                  		; Send traffic lights signals by PORTD & PORTB
-0001a0 b935                      		out PORTB, current_stateH
-0001a1 b94b                      		out PORTD, current_stateL
+00019e b935                      		out PORTB, current_stateH
+00019f b94b                      		out PORTD, current_stateL
                                  		
                                  		; Send timer display signals by PORTC
-0001a2 b908                      		out PORTC, led0
-0001a3 d013                      		rcall delay
-0001a4 b918                      		out PORTC, led1
-0001a5 d011                      		rcall delay
+0001a0 b908                      		out PORTC, led0
+0001a1 d013                      		rcall delay
+0001a2 b918                      		out PORTC, led1
+0001a3 d011                      		rcall delay
                                  
-0001a6 cfcc                      		rjmp main
+0001a4 cfcc                      		rjmp main
                                  
                                  	;_________________________________________
                                  
@@ -1508,26 +1508,26 @@ C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmwa
                                  ;|   Timer1 Interrupt Service Routine    |
                                  ;|_______________________________________|
                                  TIMER_ISR:
-0001a7 5061                      	subi change_state_timer, 1
+0001a5 5061                      	subi change_state_timer, 1
                                  
                                  	;	Count down by 1 on the display
-0001a8 951a                      	dec led1
+0001a6 951a                      	dec led1
                                  	;	Compare Clock Unit Value to 31
-0001a9 311f                      	cpi led1, 0b00011111
-0001aa f429                      	brne exit_T1ISR
+0001a7 311f                      	cpi led1, 0b00011111
+0001a8 f429                      	brne exit_T1ISR
                                  
                                  	;	Reset Clock Unit Value
-0001ab d008                      	rcall clear_CUD
-0001ac 950a                      	dec led0
+0001a9 d008                      	rcall clear_CUD
+0001aa 950a                      	dec led0
                                  	;	Compare Clock Ten Value to 15
-0001ad 300f                      	cpi led0, 0b00001111
-0001ae f409                      	brne exit_T1ISR
+0001ab 300f                      	cpi led0, 0b00001111
+0001ac f409                      	brne exit_T1ISR
                                  
                                  	;	Reset Clock Ten Value
-0001af d001                      	rcall clear_CTD
+0001ad d001                      	rcall clear_CTD
                                  
                                  	exit_T1ISR: 
-0001b0 9518                      		reti
+0001ae 9518                      		reti
                                  
                                  ; _______________________________________
                                  ;|         Clear timer functions         |
@@ -1538,18 +1538,18 @@ C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmwa
                                  ; > TENS DISPLAY
                                  clear_CTD:
                                  	;	Start with 9
-0001b1 e009                      	ldi led0, 0b00001001
+0001af e009                      	ldi led0, 0b00001001
                                  	;	Set transistor value of Clock Tens Display to 1 
-0001b2 6100                      	ori led0, 1 << 4
-0001b3 9508                      	ret
+0001b0 6100                      	ori led0, 1 << 4
+0001b1 9508                      	ret
                                  
                                  ; > UNITS DISPLAY
                                  clear_CUD:
                                  	;	Start with 9
-0001b4 e019                      	ldi led1, 0b00001001
+0001b2 e019                      	ldi led1, 0b00001001
                                  	;	Set transistor value of Clock Units Display to 1 
-0001b5 6210                      	ori led1, 1 << 5
-0001b6 9508                      	ret
+0001b3 6210                      	ori led1, 1 << 5
+0001b4 9508                      	ret
                                  ;________________________________________
                                  
                                  ; _______________________________________
@@ -1560,16 +1560,16 @@ C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmwa
                                  delay:
                                  	.equ ClockMHz = 16 ; 16MHz
                                  	.equ DelayMs = 1 ; 2ms
-0001b7 e0d0                      	ldi r29, byte3 (ClockMHz * 1000 * DelayMs / 5)
-0001b8 e0cc                      	ldi r28, high (ClockMHz * 1000 * DelayMs / 5)
-0001b9 e8b0                      	ldi r27, low(ClockMHz * 1000 * DelayMs / 5)
+0001b5 e0d0                      	ldi r29, byte3 (ClockMHz * 1000 * DelayMs / 5)
+0001b6 e0cc                      	ldi r28, high (ClockMHz * 1000 * DelayMs / 5)
+0001b7 e8b0                      	ldi r27, low(ClockMHz * 1000 * DelayMs / 5)
                                  	
-0001ba 50b1                      	subi r27,1
-0001bb 40c0                      	sbci r28,0
-0001bc 40d0                      	sbci r29,0
-0001bd f7e0                      	brcc pc-3
+0001b8 50b1                      	subi r27,1
+0001b9 40c0                      	sbci r28,0
+0001ba 40d0                      	sbci r29,0
+0001bb f7e0                      	brcc pc-3
                                  
-0001be 9508                      	ret
+0001bc 9508                      	ret
                                  ;________________________________________
                                  
                                  ; ________________________________________
@@ -1581,19 +1581,19 @@ C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmwa
                                  ;|  - Reload Z pointer with a new address |
                                  ;|________________________________________|
                                  STATE0:
-0001bf e06f                      	ldi change_state_timer, 15
+0001bd e06f                      	ldi change_state_timer, 15
                                  
                                  	; Load traffic lights signal distribution from memory
-0001c0 e0f0                      	ldi ZH, high(Table_States+0<<1)  
-0001c1 e3e0                          ldi ZL, low(Table_States+0<<1)
-0001c2 9135                          lpm current_stateH, Z+
-0001c3 9144                      	lpm current_stateL, Z
+0001be e0f0                      	ldi ZH, high(Table_States+0<<1)  
+0001bf e3e0                          ldi ZL, low(Table_States+0<<1)
+0001c0 9135                          lpm current_stateH, Z+
+0001c1 9144                      	lpm current_stateL, Z
                                  
-0001c4 e0f0                      	ldi ZH, high(state0_msg<<1)
-0001c5 e3ee                          ldi ZL, low(state0_msg<<1)
-0001c6 d043                          rcall send_string
+0001c2 e0f0                      	ldi ZH, high(state0_msg<<1)
+0001c3 e3ee                          ldi ZL, low(state0_msg<<1)
+0001c4 d043                          rcall send_string
                                  
-0001c7 9508                      	ret
+0001c5 9508                      	ret
                                  
                                  ; ________________________________________
                                  ;|		 		 State 1				  |
@@ -1607,30 +1607,30 @@ C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmwa
                                  ;|  - Change display start value          |
                                  ;|________________________________________|
                                  STATE1:
-0001c8 e169                      	ldi change_state_timer, 25
+0001c6 e169                      	ldi change_state_timer, 25
                                  
-0001c9 e0f0                      	ldi ZH, high(Table_States+1<<1)  
-0001ca e3e2                          ldi ZL, low(Table_States+1<<1)
-0001cb 9135                          lpm current_stateH, Z+
-0001cc 9144                      	lpm current_stateL, Z
+0001c7 e0f0                      	ldi ZH, high(Table_States+1<<1)  
+0001c8 e3e2                          ldi ZL, low(Table_States+1<<1)
+0001c9 9135                          lpm current_stateH, Z+
+0001ca 9144                      	lpm current_stateL, Z
                                  
                                  	;	Count down 90 sec
                                  
                                  	;	Load 9 on led0
-0001cd e009                      	ldi led0, 0b00001001
+0001cb e009                      	ldi led0, 0b00001001
                                  	;	Set transistor value of Clock Tens Display to 1 
-0001ce 6100                      	ori led0, 1 << 4
+0001cc 6100                      	ori led0, 1 << 4
                                  
                                  	;	Load 0 on led1
-0001cf e010                      	ldi led1, 0b00000000
+0001cd e010                      	ldi led1, 0b00000000
                                  	;	Set transistor value of Clock Units Display to 1 
-0001d0 6210                      	ori led1, 1 << 5
+0001ce 6210                      	ori led1, 1 << 5
                                  
-0001d1 e0f0                      	ldi ZH, high(state1_msg<<1)
-0001d2 e9e6                          ldi ZL, low(state1_msg<<1)
-0001d3 d036                          rcall send_string
+0001cf e0f0                      	ldi ZH, high(state1_msg<<1)
+0001d0 e9e6                          ldi ZL, low(state1_msg<<1)
+0001d1 d036                          rcall send_string
                                  
-0001d4 9508                      	ret
+0001d2 9508                      	ret
                                  
                                  ; ________________________________________
                                  ;|		 		 State 2				  |
@@ -1644,18 +1644,18 @@ C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmwa
                                  ;|  - Reload Z pointer with a new address |
                                  ;|________________________________________|
                                  STATE2:
-0001d5 e065                      	ldi change_state_timer, 5
+0001d3 e065                      	ldi change_state_timer, 5
                                  
-0001d6 e0f0                      	ldi ZH, high(Table_States+2<<1)  
-0001d7 e3e4                          ldi ZL, low(Table_States+2<<1)
-0001d8 9135                          lpm current_stateH, Z+
-0001d9 9144                      	lpm current_stateL, Z
+0001d4 e0f0                      	ldi ZH, high(Table_States+2<<1)  
+0001d5 e3e4                          ldi ZL, low(Table_States+2<<1)
+0001d6 9135                          lpm current_stateH, Z+
+0001d7 9144                      	lpm current_stateL, Z
                                  
-0001da e0f0                      	ldi ZH, high(state2_msg<<1)
-0001db eee8                          ldi ZL, low(state2_msg<<1)
-0001dc d02d                          rcall send_string
+0001d8 e0f0                      	ldi ZH, high(state2_msg<<1)
+0001d9 eee8                          ldi ZL, low(state2_msg<<1)
+0001da d02d                          rcall send_string
                                  
-0001dd 9508                      	ret
+0001db 9508                      	ret
                                  
                                  ; ________________________________________
                                  ;|		 		 State 3				  |
@@ -1668,18 +1668,18 @@ C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmwa
                                  ;|  - Reload Z pointer with a new address |
                                  ;|________________________________________|
                                  STATE3:
-0001de e36c                      	ldi change_state_timer, 60
+0001dc e36c                      	ldi change_state_timer, 60
                                  
-0001df e0f0                      	ldi ZH, high(Table_States+3<<1)  
-0001e0 e3e6                          ldi ZL, low(Table_States+3<<1)
-0001e1 9135                          lpm current_stateH, Z+
-0001e2 9144                      	lpm current_stateL, Z
+0001dd e0f0                      	ldi ZH, high(Table_States+3<<1)  
+0001de e3e6                          ldi ZL, low(Table_States+3<<1)
+0001df 9135                          lpm current_stateH, Z+
+0001e0 9144                      	lpm current_stateL, Z
                                  
-0001e3 e0f1                      	ldi ZH, high(state3_msg<<1)
-0001e4 e3ec                          ldi ZL, low(state3_msg<<1)
-0001e5 d024                          rcall send_string
+0001e1 e0f1                      	ldi ZH, high(state3_msg<<1)
+0001e2 e3ec                          ldi ZL, low(state3_msg<<1)
+0001e3 d024                          rcall send_string
                                  
-0001e6 9508                      	ret
+0001e4 9508                      	ret
                                  
                                  ; ________________________________________
                                  ;|		 		 State 4				  |
@@ -1693,30 +1693,30 @@ C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmwa
                                  ;|  - Change display start value          |
                                  ;|________________________________________|
                                  STATE4:
-0001e7 e065                      	ldi change_state_timer, 5
+0001e5 e065                      	ldi change_state_timer, 5
                                  
-0001e8 e0f0                      	ldi ZH, high(Table_States+4<<1)  
-0001e9 e3e8                          ldi ZL, low(Table_States+4<<1)
-0001ea 9135                          lpm current_stateH, Z+
-0001eb 9144                      	lpm current_stateL, Z
+0001e6 e0f0                      	ldi ZH, high(Table_States+4<<1)  
+0001e7 e3e8                          ldi ZL, low(Table_States+4<<1)
+0001e8 9135                          lpm current_stateH, Z+
+0001e9 9144                      	lpm current_stateL, Z
                                  
                                  	;	Count down 05 sec
                                  
                                  	;	Load 0 on led0
-0001ec e000                      	ldi led0, 0b00000000
+0001ea e000                      	ldi led0, 0b00000000
                                  	;	Set transistor value of Clock Tens Display to 1 
-0001ed 6100                      	ori led0, 1 << 4
+0001eb 6100                      	ori led0, 1 << 4
                                  
                                  	;	Load 5 on led1
-0001ee e015                      	ldi led1, 0b00000101
+0001ec e015                      	ldi led1, 0b00000101
                                  	;	Set transistor value of Clock Units Display to 1 
-0001ef 6210                      	ori led1, 1 << 5
+0001ed 6210                      	ori led1, 1 << 5
                                  
-0001f0 e0f1                      	ldi ZH, high(state4_msg<<1)
-0001f1 e8ee                          ldi ZL, low(state4_msg<<1)
-0001f2 d017                          rcall send_string
+0001ee e0f1                      	ldi ZH, high(state4_msg<<1)
+0001ef e8ee                          ldi ZL, low(state4_msg<<1)
+0001f0 d017                          rcall send_string
                                  
-0001f3 9508                      	ret
+0001f1 9508                      	ret
                                  
                                  ; ________________________________________
                                  ;|		 		 State 5				  |
@@ -1730,33 +1730,33 @@ C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmwa
                                  ;|  - Change display start value          |
                                  ;|________________________________________|
                                  STATE5:
-0001f4 e169                      	ldi change_state_timer, 25
+0001f2 e169                      	ldi change_state_timer, 25
                                  
-0001f5 e0f0                      	ldi ZH, high(Table_States+5<<1)  
-0001f6 e3ea                          ldi ZL, low(Table_States+5<<1)
-0001f7 9135                          lpm current_stateH, Z+
-0001f8 9144                      	lpm current_stateL, Z
+0001f3 e0f0                      	ldi ZH, high(Table_States+5<<1)  
+0001f4 e3ea                          ldi ZL, low(Table_States+5<<1)
+0001f5 9135                          lpm current_stateH, Z+
+0001f6 9144                      	lpm current_stateL, Z
                                  
                                  	;	Count down 45 sec
                                  
                                  	;	Load 4 on led0
-0001f9 e004                      	ldi led0, 0b00000100
+0001f7 e004                      	ldi led0, 0b00000100
                                  	;	Set transistor value of Clock Tens Display to 1 
-0001fa 6100                      	ori led0, 1 << 4
+0001f8 6100                      	ori led0, 1 << 4
                                  
                                  	;	Load 5 on led1
-0001fb e015                      	ldi led1, 0b00000101
+0001f9 e015                      	ldi led1, 0b00000101
                                  	;	Set transistor value of Clock Units Display to 1 
-0001fc 6210                      	ori led1, 1 << 5
+0001fa 6210                      	ori led1, 1 << 5
                                  
-0001fd e0f1                      	ldi ZH, high(state5_msg<<1)
-0001fe eee4                          ldi ZL, low(state5_msg<<1)
-0001ff d00a                          rcall send_string
+0001fb e0f1                      	ldi ZH, high(state5_msg<<1)
+0001fc eee4                          ldi ZL, low(state5_msg<<1)
+0001fd d00a                          rcall send_string
                                  
-000200 9508                      	ret
+0001fe 9508                      	ret
                                  
                                  ; ________________________________________
-                                 ;|		 		 State 5				  |
+                                 ;|		 		 State 6				  |
                                  ;|----------------------------------------|
                                  ;|  Traffic lights:                       |
                                  ;|   > 1, 2 and 3 are red                 |
@@ -1766,18 +1766,18 @@ C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmwa
                                  ;|  - Reload Z pointer with a new address |
                                  ;|________________________________________|
                                  STATE6:
-000201 e065                      	ldi change_state_timer, 5
+0001ff e065                      	ldi change_state_timer, 5
                                  
-000202 e0f0                      	ldi ZH, high(Table_States+6<<1)  
-000203 e3ec                          ldi ZL, low(Table_States+6<<1)
-000204 9135                          lpm current_stateH, Z+
-000205 9144                      	lpm current_stateL, Z
+000200 e0f0                      	ldi ZH, high(Table_States+6<<1)  
+000201 e3ec                          ldi ZL, low(Table_States+6<<1)
+000202 9135                          lpm current_stateH, Z+
+000203 9144                      	lpm current_stateL, Z
                                  
-000206 e0f2                      	ldi ZH, high(state6_msg<<1)
-000207 e3ea                          ldi ZL, low(state6_msg<<1)
-000208 d001                          rcall send_string
+000204 e0f2                      	ldi ZH, high(state6_msg<<1)
+000205 e3e8                          ldi ZL, low(state6_msg<<1)
+000206 d001                          rcall send_string
                                  
-000209 9508                      	ret
+000207 9508                      	ret
                                  
                                  ; _______________________________________
                                  ;| Send string via USART0 (Z ptr)        |
@@ -1787,17 +1787,17 @@ C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmwa
                                  ;|_______________________________________|
                                  
                                  send_string:
-00020a 9125                          lpm temp, Z+             ; lê caractere da flash
-00020b 3223                          cpi temp, '#'            ; chegou no fim?
-00020c f039                          breq send_done
+000208 9125                          lpm temp, Z+             ; lê caractere da flash
+000209 3223                          cpi temp, '#'            ; chegou no fim?
+00020a f039                          breq send_done
                                  wait_udre:
-00020d 91b0 00c0                     lds r27, UCSR0A
-00020f ffb5                          sbrs r27, UDRE0          ; espera buffer vazio
-000210 cffc                          rjmp wait_udre
-000211 9320 00c6                     sts UDR0, temp           ; transmite caractere
-000213 cff6                          rjmp send_string
+00020b 91b0 00c0                     lds r27, UCSR0A
+00020d ffb5                          sbrs r27, UDRE0          ; espera buffer vazio
+00020e cffc                          rjmp wait_udre
+00020f 9320 00c6                     sts UDR0, temp           ; transmite caractere
+000211 cff6                          rjmp send_string
                                  send_done:
-000214 9508                          ret
+000212 9508                          ret
 
 
 RESOURCE USE INFORMATION
@@ -1847,8 +1847,8 @@ Instructions used: 25 out of 113 (22.1%)
 "ATmega328P" memory use summary [bytes]:
 Segment   Begin    End      Code   Data   Used    Size   Use%
 ---------------------------------------------------------------
-[.cseg] 0x000000 0x00042a    416    610   1026   32768   3.1%
+[.cseg] 0x000000 0x000426    416    606   1022   32768   3.1%
 [.dseg] 0x000100 0x000100      0      0      0    2048   0.0%
 [.eseg] 0x000000 0x000000      0      0      0    1024   0.0%
 
-Assembly complete, 0 errors, 2 warnings
+Assembly complete, 0 errors, 4 warnings

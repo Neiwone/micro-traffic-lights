@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  C:\Users\vcn05\OneDrive\Documentos\microcontroladores\micro-traffic-light\firmware\traffic-lights-firmware\main.asm Fri Sep 26 22:20:07 2025
+AVRASM ver. 2.2.8  C:\Users\jotaf\OneDrive\Documentos\UFAL\Microcontroladores\Projeto\micro-traffic-lights\firmware\traffic-lights-firmware\main.asm Mon Sep 29 01:11:59 2025
 
 
 EQU  SIGNATURE_000 0000001e
@@ -702,8 +702,8 @@ DEF  current_stateH r19
 DEF  current_stateL r20
 DEF  state        r21
 DEF  change_state_timer r22
-CSEG RESET        00000149
-CSEG TIMER_ISR    000001a7
+CSEG RESET        00000147
+CSEG TIMER_ISR    000001a5
 CSEG Table_States 00000018
 CSEG Message_States 0000001f
 CSEG state0_msg   0000001f
@@ -712,35 +712,35 @@ CSEG state2_msg   00000074
 CSEG state3_msg   0000009e
 CSEG state4_msg   000000c7
 CSEG state5_msg   000000f2
-CSEG state6_msg   0000011d
+CSEG state6_msg   0000011c
 EQU  UBRRvalue    00000067
 EQU  PRESCALE     00000005
 EQU  PRESCALE_DIV 00000400
 EQU  WGM          00000004
-EQU  TOP          00000f42
-CSEG clear_CUD    000001b4
-CSEG clear_CTD    000001b1
-CSEG STATE1       000001c8
-CSEG main         00000173
-CSEG CONTINUE     000001a0
-CSEG TEST0        00000177
-CSEG TEST1        0000017c
-CSEG STATE0       000001bf
-CSEG TEST2        00000181
-CSEG TEST3        00000186
-CSEG STATE2       000001d5
-CSEG TEST4        0000018b
-CSEG STATE3       000001de
-CSEG TEST5        00000190
-CSEG STATE4       000001e7
-CSEG TEST6        00000195
-CSEG STATE5       000001f4
-CSEG TEST7        0000019a
-CSEG STATE6       00000201
-CSEG delay        000001b7
-CSEG exit_T1ISR   000001b0
+EQU  TOP          00003d09
+CSEG clear_CUD    000001b2
+CSEG clear_CTD    000001af
+CSEG STATE1       000001c6
+CSEG main         00000171
+CSEG CONTINUE     0000019e
+CSEG TEST0        00000175
+CSEG TEST1        0000017a
+CSEG STATE0       000001bd
+CSEG TEST2        0000017f
+CSEG TEST3        00000184
+CSEG STATE2       000001d3
+CSEG TEST4        00000189
+CSEG STATE3       000001dc
+CSEG TEST5        0000018e
+CSEG STATE4       000001e5
+CSEG TEST6        00000193
+CSEG STATE5       000001f2
+CSEG TEST7        00000198
+CSEG STATE6       000001ff
+CSEG delay        000001b5
+CSEG exit_T1ISR   000001ae
 EQU  ClockMHz     00000010
 EQU  DelayMs      00000001
-CSEG send_string  0000020a
-CSEG send_done    00000214
-CSEG wait_udre    0000020d
+CSEG send_string  00000208
+CSEG send_done    00000212
+CSEG wait_udre    0000020b
