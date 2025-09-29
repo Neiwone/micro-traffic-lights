@@ -58,7 +58,7 @@ state6_msg: .db "Semaforo 0: Vermelho, Semaforo 1: Vermelho, Semaforo 2: Vermelh
 
 
 RESET:
-	;Stack initialization
+	; Stack initialization
 	ldi temp, low(RAMEND)
 	out SPL, temp
 	ldi temp, high(RAMEND)
